@@ -766,15 +766,14 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 
 ### Hlavní Přínosy - Usability Revolution
 
-- **Usability**: První **nativní PyTorch verze** (extrémně snadné použití)
-  - Jednoduché API: `from yolov5 import YOLOv5; model = YOLOv5(...)`
+- **Usability**: První **nativní PyTorch verze** (snadné použití)
   - Export do mobilních zařízení
-  - Vynikající dokumentace
+  - Dobrá dokumentace
 
 - **Auto-anchor**: Automatický výpočet velikosti kotev (anchors)
   - Vychází z **K-Means** (jako YOLOv2/v3)
   - V YOLOv5 dotaženo dál pomocí **Genetického algoritmu (Evolution)**
-  - Algoritmus evolucí optimalizuje kotvy na váš dataset!
+  - Algoritmus evolucí optimalizuje kotvy na dataset
 
 - **C3 Modul**: Efektivní blok s hranatou architekturou
   - Rozdělí data na **dvě cesty**:
@@ -785,9 +784,9 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 
 > 💡 **Moderní verze** (YOLOv8, v10, v11) už kotvy (Anchors) **nepoužívají vůbec** → **Anchor-Free** přístup
 
-Toto je zásadní posun - bez kotev se síť musí naučit "od nuly", ale je to obecnější.
+Toto je důležitý posun - bez kotev se síť musí naučit "od nuly", ale je to obecnější.
 
-## YOLOv8 (2023, Ultralytics) - State-of-the-Art
+## YOLOv8 (2023, Ultralytics)
 
 ### Hlavní přístupy
 
@@ -796,30 +795,24 @@ Toto je zásadní posun - bez kotev se síť musí naučit "od nuly", ale je to 
   - **Segmentace** (pixel-level klasifikace)
   - **Pose estimation** (lokalizace klíčových bodů)
   - **Klasifikace** (image-level klasifikace)
-  - Všechno se sdílí backbonský kód!
 
 - **C2f Module**: Náhrada staršího **C3** modulu
   - Lepší **tok gradientů** při zpětné propagaci
-  - Sbírá **výstupy z různých mezikroků** (ähnul přístupu DenseNet)
+  - Sbírá **výstupy z různých mezikroků**
   - Efektivnější učení
 
 - **Anchor-Free**: Stává se novým standardem
   - Model už nepoužívá předdefinované kotvy
-  - Místo toho predikuje přímé souřadnice (jako YOLOv1!)
+  - Místo toho predikuje přímé souřadnice ("podobně" jako YOLOv1)
   - Ale s moderní architekturou a technikami
 
-## YOLOv11 (2024/25, Ultralytics) - Latest
+## YOLOv11 (2024/25, Ultralytics)
 
 ### Nejnovější vývoj
 
 - **C3k2 & C2PSA**: Vylepšené bloky s **mechanismem pozornosti (Attention)**
   - Attention umožňuje modelu "soustředit se" na důležité části
   - C2PSA (Channel Spatial Attention) - hybrid přístupu
-
-- **Efficiency**: Zaměření na **maximální výkon** při **menším počtu parametrů**
-  - Slim verze pro edge devices
-  - Stále Top-of-the-line přesnost
-
 ---
 
 
