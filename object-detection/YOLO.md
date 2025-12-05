@@ -6,7 +6,7 @@
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší "kde je objekt" v pixelech, ale řeší to na úrovni jednotlivých buňek.
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší "kde je objekt" v pixelech, ale problém lokalizace řeší na úrovni jednotlivých buňek.
 
 ```mermaid
 flowchart LR
