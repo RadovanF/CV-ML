@@ -326,9 +326,9 @@ Ztrátová funkce YOLOv1 se skládá z částí, které měří různé typy chy
 
 **Minimalizace součtu těchto chyb vede k tomu, že model:**
 - ✅ Správně lokalizuje objekty (chyba pozice/velikosti)
-- ✅ Správně je klasifikuje (chyba třídy)
 - ✅ Správně ohodnotí kvalitu predikcí (chyba confidence)
-
+- ✅ Správně je klasifikuje (chyba třídy)
+  
 ## Podrobnější pohled - 5 komponent
 
 ```mermaid
