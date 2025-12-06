@@ -470,7 +470,6 @@ class YOLOv1Loss(nn.Module):
 **Praktický důsledek:**
 - Model se "zaměřuje" na lokalizaci (5×)
 - Ignoruje (relativně) pozadí (0.5×)
-- Rovnoměrně řeší detekci a klasifikaci (1×)
 
 ## Pseudokód ztrátové funkce
 
