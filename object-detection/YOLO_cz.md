@@ -51,7 +51,7 @@ Aby se detektory v buňkách nehádaly ("Já to vidím!" - "Já taky!"), YOLO za
 
 Praktické důsledky:
 - Objekt přesahující 4 buňky? → Učí se ho **jen ta jedna se středem**
-- Ostatní buňky jsou **ignorovány** (Confidence = 0), i když objekt vidí
+- Ostatní buňky jsou **ignorovány**, i když objekt vidí
 - To **nutí síť** naučit se přesně lokalizovat střed objektu
 
 Toto omezení je v YOLOv1 poměrně přísné - v pozdějších verzích se to postupně měkčí (anchor boxes ve v2, multi-scale predictions ve v3).
@@ -79,7 +79,7 @@ Pro každou buňku (i, j) chceme predikovat **vektor hodnot**, který obsahuje:
 Každá buňka je tedy odpovědná za výstup 30 hodnot:
 - Prvních 5 hodnot popisuje **Box 1**
 - Následujících 5 hodnot popisuje **Box 2**
-- Zbylých 20 hodnot reprezentuje **třídy** (UNIX: v YOLOv1 jsou společné pro obě boxy!)
+- Zbylých 20 hodnot reprezentuje **třídy** (v YOLOv1 jsou společné pro oba boxy!)
 
 ---
 
