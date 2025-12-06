@@ -301,6 +301,11 @@ if __name__ == "__main__":
 
 ## Základní pohled
 
+<center>
+<img src="./imgs/yolov1-01-loss-01kn.png" alt="" width="480">
+</center>
+
+
 Ztrátová funkce YOLOv1 se skládá z částí, které měří různé typy chyb:
 
 ### 1. Chyba pozice a velikosti
