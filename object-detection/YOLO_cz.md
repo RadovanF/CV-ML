@@ -594,6 +594,10 @@ Toto byla zásadní **změna** ve verzi 2.
 - Model se nemusí učit "základní" tvary objektů, už je "zná"
 - Lepší výchozí bod pro trénink
 
+<center>
+<img src="./imgs/yolov2-01.png" alt="" width="640">
+</center>
+
 ### D) Multi-Scale Trénování
 
 - **YOLOv2 je plně konvoluční** (bez Dense vrstev → variabilní vstup)
@@ -610,7 +614,7 @@ Toto byla zásadní **změna** ve verzi 2.
 - Dalších N iterací na 352×352 - středně-velké objekty
 - Atd. až po 608×608 - velké objekty, detaily
 
-Toto je forma **data augmentation** - ale zásadní pro detekci.
+Toto je forma **data augmentation** - ale důležitá pro detekci.
 
 ### E) Páteřní Síť: Darknet-19
 
@@ -624,6 +628,10 @@ Toto je forma **data augmentation** - ale zásadní pro detekci.
 ---
 
 ## YOLOv3 (2018)
+
+<center>
+<img src="./imgs/yolov3-01.png" alt="" width="720">
+</center>
 
 ### A) Nová páteř: Darknet-53
 
