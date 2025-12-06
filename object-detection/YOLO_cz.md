@@ -781,9 +781,8 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
   - Nakonec se obě cesty **spojí dohromady** (konkatenace)
   - Efektivnější, než kdyby všechny vrstvy byly sériově
 
-> 💡 **Moderní verze** (YOLOv8, v10, v11) už kotvy (Anchors) **nepoužívají vůbec** → **Anchor-Free** přístup
-
-Toto je důležitý posun - bez kotev se síť musí naučit "od nuly", ale je to obecnější.
+> 💡 **Moderní verze** (YOLOv8, v10, v11) už kotvy (Anchors) **nepoužívají vůbec** → **Anchor-Free** přístup.
+> Toto je důležitý posun - bez kotev se síť musí naučit "od nuly", ale je to obecnější.
 
 ## YOLOv8 (2023, Ultralytics)
 
