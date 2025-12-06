@@ -8,14 +8,7 @@
 
 YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší "kde je objekt" v pixelech, ale problém lokalizace řeší na úrovni jednotlivých buňek.
 
-```mermaid
-flowchart LR
-    A["Obrázek (např. 448×448)"] --> B["Mřížka S×S (např. 7×7)"]
-    B --> C["Buňka (i,j)"]
-    C --> D["Box 1: x, y, w, h, conf"]
-    C --> E["Box 2: x, y, w, h, conf"]
-    C --> F["Třídy: C pravděpodobností"]
-```
+<img src="./imgs/yolov1-00kn.png" alt="" width="720">
 
 ### Princip mřížky
 
