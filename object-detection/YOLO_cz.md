@@ -8,7 +8,9 @@
 
 YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší "kde je objekt" v pixelech, ale problém lokalizace řeší na úrovni jednotlivých buňek.
 
-<img src="./imgs/yolov1-00kn.png" alt="" width="720">
+<center>
+<img src="./imgs/yolov1-00kn.png" alt="" width="1280">
+</center>center>
 
 ### Princip mřížky
 
