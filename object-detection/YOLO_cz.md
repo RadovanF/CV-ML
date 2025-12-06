@@ -815,19 +815,19 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 
 ## Zdroje / Reference
 
-Redmon, Joseph. "You Only Look Once: Unified, Real-Time Object Detection." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2016, https://arxiv.org/abs/1506.02640.
+Bochkovskiy, Alexey, et al. "YOLOv4: Optimal Speed and Accuracy of Object Detection." *arXiv*, 2020, https://arxiv.org/abs/2004.10934.
 
-Redmon, Joseph, and Ali Farhadi. "YOLO9000: Better, Faster, Stronger." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2017, https://arxiv.org/abs/1612.08242.
+Redmon, Joseph, and Ali Farhadi. "YOLO9000: Better, Faster, Stronger." *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, 2017, pp. 7263-7271, https://arxiv.org/abs/1612.08242.
 
-Redmon, Joseph. "YOLOv3: An Incremental Improvement." arXiv preprint arXiv:1804.02767, 2018, https://arxiv.org/abs/1804.02767.
+Redmon, Joseph, and Ali Farhadi. "YOLOv3: An Incremental Improvement." *arXiv*, 2018, https://arxiv.org/abs/1804.02767.
 
-Bochkovskiy, Alexey, Chien-Yao Wang, and Hong-Yuan Mark Liao. "YOLOv4: Optimal Speed and Accuracy of Object Detection." arXiv preprint arXiv:2004.10934, 2020, https://arxiv.org/abs/2004.10934.
+Redmon, Joseph, et al. "You Only Look Once: Unified, Real-Time Object Detection." *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, 2016, pp. 779-788, https://arxiv.org/abs/1506.02640.
 
-Zheng, Chengpeng, et al. "YOLOv6: A Single-Stage Object Detector." arXiv preprint arXiv:2301.05586, 2023, https://arxiv.org/abs/2301.05586.
+Terven, Juan, and Diana Cordova-Esparza. "A Comprehensive Review of YOLO Architectures in Computer Vision: From YOLOv1 to YOLOv8 and YOLO-NAS." *Machine Learning and Knowledge Extraction*, vol. 5, no. 4, 2023, pp. 1680-1716, https://arxiv.org/abs/2304.00501.
 
-Wang, Chien-Yao, et al. "YOLOv7: Trainable State-of-the-art Object Detector." arXiv preprint arXiv:2207.02696, 2022, https://arxiv.org/abs/2207.02696.
+Wang, Chien-Yao, et al. "YOLOv7: Trainable State-of-the-Art Object Detector." *arXiv*, 2022, https://arxiv.org/abs/2207.02696.
 
-Terven, Juan, and Diana Cordova-Esparza. "A Comprehensive Review of YOLO Architectures in Computer Vision: From YOLOv1 to YOLOv8 and YOLO-NAS." Machine Learning and Knowledge Extraction, vol. 5, no. 4, 2023, pp. 1680-1716, https://arxiv.org/abs/2304.00501.
+Zheng, Chengpeng, et al. "YOLOv6: A Single-Stage Object Detector." *arXiv*, 2023, https://arxiv.org/abs/2301.05586.
 
 **Poznámka:** např. YOLOv5 nebo YOLOv11 jsou dostupné jako repozitáře na GitHub Ultralytics.
 
