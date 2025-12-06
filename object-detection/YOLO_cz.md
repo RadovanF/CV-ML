@@ -336,20 +336,10 @@ Ztrátová funkce YOLOv1 se skládá z částí, které měří různé typy chy
 - ✅ Správně je klasifikuje (chyba třídy)
 
 <center>
-<img src="./imgs/yolov1-loss-02" alt="" width="640">
+<img src="./imgs/yolov1-loss-02.png" alt="" width="640">
 </center>
   
 ## Podrobnější pohled - 5 komponent
-
-```mermaid
-graph TD
-    L["Total YOLOv1 loss"] --> XY["λ_coord · loss_xy<br/>(chyba středu x,y)"]
-    L --> WH["λ_coord · loss_wh<br/>(chyba velikosti √w, √h)"]
-    L --> OBJ["loss_obj<br/>(confidence pro buňky s objektem)"]
-    L --> NOOBJ["λ_noobj · loss_noobj<br/>(confidence pro pozadí)"]
-    L --> CLS["loss_class<br/>(chyba tříd C)"]
-
-```
 
 Ztrátová funkce YOLOv1 používá **SSE (Sum of Squared Errors)** a sestává z **5 částí**, které je možné seskupit podle účelu:
 
