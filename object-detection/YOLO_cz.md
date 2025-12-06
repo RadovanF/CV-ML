@@ -1,6 +1,6 @@
-# Vysvětlení Principu YOLOv1 + Evoluce YOLO Detektorů
+# Vysvětlení principu YOLOv1 + Evoluce YOLO detektorů
 
-> **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak YOLOv1 funguje uvnitř.**
+> **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak zejména YOLOv1 a navazující verze fungují uvnitř.**
 
 ---
 
