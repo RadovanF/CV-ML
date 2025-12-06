@@ -716,12 +716,12 @@ Tímto se model stává **mnohem efektivnější** - každé měřítko má svou
 
 ## Technologické inspirace v rámci v1-v3
 
-### YOLOv2 Vycházel z:
+### YOLOv2 model:
 - **Batch Normalization**: Ioffe & Szegedy, 2015 - revoluci v hlubokém učení
 - **Anchor Boxes**: Faster R-CNN (Ren et al., 2015) - zásadní inovace
 - **Multi-scale Training**: SSD (Liu et al., 2016) - odolnost vůči velikostem objektů
 
-### YOLOv3 Vycházel z:
+### YOLOv3 model:
 - **Residual Networks**: ResNet (He et al., 2015) - umožnilo velmi hluboké sítě
 - **Feature Pyramids**: FPN (Lin et al., 2017) - multi-scale feature extraction
 
