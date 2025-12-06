@@ -54,7 +54,7 @@ Praktické důsledky:
 - Ostatní buňky jsou **ignorovány**, i když objekt vidí
 - To **nutí síť** naučit se přesně lokalizovat střed objektu
 
-Toto omezení je v YOLOv1 poměrně přísné - v pozdějších verzích se to postupně měkčí (anchor boxes ve v2, multi-scale predictions ve v3).
+Toto omezení je v YOLOv1 poměrně svazující - v pozdějších verzích se to autoři snaží postupně řešit (anchor boxes ve v2, multi-scale predictions ve v3).
 
 ---
 
@@ -86,8 +86,7 @@ Každá buňka je tedy odpovědná za výstup 30 hodnot:
 ## 5. Jak se pozná pozadí? (Žádná extra třída)
 
 - **YOLOv1 NEMÁ speciální třídu "Background"**
-- Pokud buňka **neobsahuje střed objektu** (je to jen strom/obloha)
-- Učíme síť predikovat **Confidence = 0** pro oba boxy
+- Pokud buňka **neobsahuje střed objektu** (je to jen strom/obloha), učíme síť predikovat **Confidence = 0** pro oba boxy
 - Hodnota "Class" nás v takovém případě **nezajímá** a v Loss funkci se **ignoruje**
 
 To znamená, že síť se sama učí rozpoznat rozdíl mezi "zde je objekt" (high confidence) a "zde není objekt" (low confidence).
