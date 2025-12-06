@@ -110,8 +110,8 @@ To znamená, že síť se sama učí rozpoznat rozdíl mezi "zde je objekt" (hig
 - Formálně se confidence učí regresí na hodnotu IoU (u buněk s objektem) nebo 0 (u pozadí); intuitivně ji můžeme číst jako kombinaci jistoty, že tu objekt je, a kvality překryvu.
 ---
 
-# Ukázka implementace/pseudokódu YOLOv1 v PyTorch
-
+# Ukázka YOLOv1 modelu s VGG + pseudokód v PyTorch
+- Diagram originální sítě je ukázan níže, zde v pseudokódu je pro jednoduchost/názornost použit již existující VGG16 model z torchvision 
 
 ### Část 1: Inicializace + definice modelu (Backbone + Head)
 
@@ -158,9 +158,9 @@ class YOLOv1Simple(nn.Module):
 ```python
 param.requires_grad = False  # Tyto váhy se nebudou učit
 ```
-- Často zmrazujeme VGG váhy a učíme jen detection head
+- Často je možné zmrazit váhy a učit pouze "detection head"
 - Tímto uspoříme čas tréninku
-- VGG už ví, co jsou "objekty", my jej jen učíme, **kde** jsou
+- Síť (např. VGG) už ví, co jsou "objekty", my ji jen učíme, **kde** jsou
 
 ### Část 3: Výpočet dimenzí
 
@@ -295,6 +295,12 @@ if __name__ == "__main__":
 
 ---
 
+# Originální model YOLOv1
+
+<center>
+<img src="./imgs/yolov1-model.png" alt="" width="640">
+</center>
+
 ---
 
 # YOLOv1 Ztrátová funkce
@@ -328,6 +334,10 @@ Ztrátová funkce YOLOv1 se skládá z částí, které měří různé typy chy
 - ✅ Správně lokalizuje objekty (chyba pozice/velikosti)
 - ✅ Správně ohodnotí kvalitu predikcí (chyba confidence)
 - ✅ Správně je klasifikuje (chyba třídy)
+
+<center>
+<img src="./imgs/yolov1-loss-02" alt="" width="640">
+</center>
   
 ## Podrobnější pohled - 5 komponent
 
