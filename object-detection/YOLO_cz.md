@@ -10,7 +10,7 @@ YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
-</center>center>
+</center>
 
 ### Princip mřížky
 
