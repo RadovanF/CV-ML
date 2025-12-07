@@ -2,6 +2,8 @@
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak základní GAN sítě fungují uvnitř.**
 
+> *(Jedná se o pracovní verzi, která může místy obsahovat nechtěné překlepy)*
+
 ## Úvod
 
 Generative Adversarial Networks (GANy) jsou jedním z nejpopulárnějších a nejzajímavějších přístupů v moderní strojovém učení. Systém GAN je založen na **hře mezi neuronovými sítěmi**: generátorem, který se snaží vytvářet falešná data, a diskriminátorem, který se snaží mezi falešnými a reálnými daty rozlišovat.
