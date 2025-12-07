@@ -257,7 +257,7 @@ d_loss_fake = loss_function(outputs_fake.detach(), fake_labels)  # fake_labels =
 Generátor vytvoří falešné obrázky a diskriminátor by měl vrátit hodnoty blízké 0.
 
 **Poznámka o `.detach()`:** 
-V reálné implementaci používáme `fake_images.detach()`, aby se gradientní informace **nepropagovaly zpět do generátoru**. Chceme, aby se v Fázi 1 upravovaly pouze váhy diskriminátora. Bez `.detach()` by se diskriminátor učil "nařizovat" generátoru, jak má vypadat, místo aby se sám naučil je rozlišovat.
+V reálné implementaci používáme `fake_images.detach()`, aby se gradientní informace **nepropagovaly zpět do generátoru**. Chceme, aby se v Fázi 1 upravovaly pouze váhy diskriminátora.
 
 ##### Krok 1C: Zpětné šíření a optimalizace diskriminátora
 
