@@ -1,7 +1,7 @@
 # GAN - Generative Adversarial Networks: vysvětlení a trénování
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak základní GAN sítě fungují uvnitř.**
-
+> 
 > *(Jedná se o pracovní verzi, která může místy obsahovat nechtěné překlepy)*
 
 ## Úvod
