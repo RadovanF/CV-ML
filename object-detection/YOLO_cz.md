@@ -1,7 +1,8 @@
 # Vysvětlení principu YOLOv1 + Evoluce YOLO detektorů
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak zejména YOLOv1 a navazující verze fungují uvnitř.**
-
+> 
+> *(Jedná se o pracovní verzi, která může místy obsahovat nechtěné překlepy)*
 ---
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
