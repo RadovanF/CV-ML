@@ -200,6 +200,31 @@ g_optimizer = torch.optim.Adam(generator.parameters(), lr=0.0002)
 
 ### Pseudokód tréninku
 
+```mermaid
+flowchart LR
+  Z["z ~ N(0,1)"]:::noise
+  X["x ~ reálná data"]:::real
+  G_out["G(z)"]:::gen
+  D_real["D(x)"]:::disc
+  D_fake["D(G(z))"]:::disc
+
+  %% --- Forward pass 
+  Z --> G_out
+  G_out --> D_fake
+  X --> D_real
+
+  %% --- Training phases
+  D_real -.->|Fáze 1A: trénink D na reálných| D_opt["Trénink D"]
+  D_fake -.->|Fáze 1B: trénink D na generovaných| D_opt
+  D_fake -.->|Fáze 2: trénink G skrz D| G_opt["Trénink G"]
+
+  %% --- Styles
+  classDef noise fill:#e0f7ff,stroke:#0099cc
+  classDef real fill:#e8ffe8,stroke:#22aa22
+  classDef gen fill:#fff3cd,stroke:#c99700
+  classDef disc fill:#ffe0e0,stroke:#cc4444
+```
+
 #### FÁZE 1: Trénování diskriminátora (učí se poznat rozdíly)
 
 **Cíl:** Diskriminátor by měl lépe rozlišovat reálná a falešná data.
