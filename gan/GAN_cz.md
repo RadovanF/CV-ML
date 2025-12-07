@@ -264,9 +264,9 @@ V reálné implementaci používáme `fake_images.detach()`, aby se gradientní 
 ```python
 d_loss = d_loss_real + d_loss_fake
 
-d_optimizer.zero_grad()  # Vynuluj staré gradienty
-d_loss.backward()         # Vypočítej nové gradienty
-d_optimizer.step()        # Updatuj váhy diskriminátora
+d_optimizer.zero_grad()  
+d_loss.backward()         
+d_optimizer.step()        
 ```
 
 Diskriminátor se naučil z obou druhů dat. Jeho chyba je součet chyb z reálných a falešných dat.
@@ -313,9 +313,9 @@ To je přesně to, co chceme - **non-saturating loss** pro generátor!
 ##### Krok 2D: Zpětné šíření a optimalizace generátora
 
 ```python
-g_optimizer.zero_grad()   # Vynuluj staré gradienty
-g_loss.backward()          # Vypočítej gradienty (tentokrát pro generátor)
-g_optimizer.step()         # Updatuj váhy generátora
+g_optimizer.zero_grad()   
+g_loss.backward()          
+g_optimizer.step()         
 ```
 
 Generátor se aktualizuje na základě toho, jak si diskriminátor vedl. Pokud se diskriminátor nechal oklamat (vysoká předpověď), chyba je malá a generátor se jen mírně změní. Pokud diskriminátor poznal padělek (nízká předpověď), chyba je velká a generátor se výrazně změní.
