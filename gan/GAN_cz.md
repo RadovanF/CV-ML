@@ -39,6 +39,10 @@ Základní vzorec pro GAN byl poprvé představen v původní práci:
 min_G max_D V(D, G) = E[log D(x)] + E[log(1 - D(G(z)))]
 ```
 
+<center>
+<img src="./imgs/gan-01.png" alt="" width="480">
+</center>
+
 ### Vysvětlení jednotlivých částí
 
 #### 1.1 Co znamená "max_D"?
