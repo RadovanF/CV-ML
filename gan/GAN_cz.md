@@ -354,10 +354,9 @@ Separací fází zajistíme, že každá síť dostane dostatek času na učení
 
 GANy reprezentují fascinující paradigma v hlubokém učení, kde si dvě sítě navzájem "dělají konkurenci" a společně dosahují pozoruhodných výsledků. Zatímco základní koncept je elegantní, reálná implementace vyžaduje pečlivé ladění hyperparametrů, vhodnou volbu architektur a často pokročilejší techniky stabilizace tréninku.
 
-Základní GANy jsou obtížné na trénování a mohou trpět:
+Základní GANy jsou obtížné na trénování a např. mohou trpět na:
 - **Mode collapse:** Generátor vytváří omezený rozsah vzorů
 - **Vanishing gradients:** Diskriminátor je příliš dobrý, generátor se nemá čeho chytit
-- **Oscilace:** Chyby se neustále zvyšují a snižují
 
 Na řešení těchto problémů se zaměřují pokročilejší varianty: 
 - WGAN – nahrazuje BCE loss Wassersteinovou vzdáleností
