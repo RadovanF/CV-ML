@@ -8,44 +8,24 @@ Generative Adversarial Networks (GANy) jsou jedním z nejpopulárnějších a ne
 
 ```mermaid
 flowchart LR
+  Z["z ~ N(0,1)"]:::noise
+  X["x ~ reálná data"]:::real
+  G_out["G(z)"]:::gen
+  D_real["D(x)"]:::disc
+  D_fake["D(G(z))"]:::disc
 
-%% ==== DEFINICE UZLŮ ====
-Z[/"z ~ N(0,1)"/]:::noise
-X[/"x ~ reálná data"/]:::real
+  Z --> G_out
+  G_out --> D_fake
+  X --> D_real
 
-subgraph G[Generator]
-  G_out((G(z)))
-end
+  D_real -.-> D_opt["Trénink D"]
+  D_fake -.-> D_opt
+  D_fake -.-> G_opt["Trénink G"]
 
-subgraph D[Discriminator]
-  D_real[D(x)]
-  D_fake[D(G(z))]
-end
-
-%% ==== TOK DAT ====
-Z --> G_out
-G_out -->|generované vzorky| D_fake
-X -->|reálné vzorky| D_real
-
-%% ==== ZTRÁTY ====
-D_real -->|Loss_real (1)| D_opt[Trénink diskriminátoru]
-D_fake -->|Loss_fake (0)| D_opt
-D_fake -->|Loss_gen (1)| G_opt[Trénink generátoru]
-
-%% ==== GRADIENTY ====
-G_opt -->|∂L/∂θ_G| G_out
-
-%% ==== STYLY ====
-classDef noise fill:#e0f7ff,stroke:#0099cc,stroke-width:2px;
-classDef real fill:#e8ffe8,stroke:#22aa22,stroke-width:2px;
-classDef gen fill:#fff3cd,stroke:#c99700,stroke-width:2px;
-classDef disc fill:#ffe0e0,stroke:#cc4444,stroke-width:2px;
-
-%% ==== APLIKACE STYLŮ ====
-class Z noise;
-class X real;
-class G_out gen;
-class D_real,D_fake disc;
+  classDef noise fill:#e0f7ff,stroke:#0099cc
+  classDef real fill:#e8ffe8,stroke:#22aa22
+  classDef gen fill:#fff3cd,stroke:#c99700
+  classDef disc fill:#ffe0e0,stroke:#cc4444
 
 ```
 
