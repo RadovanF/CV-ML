@@ -45,7 +45,7 @@ min_G max_D V(D, G) = E[log D(x)] + E[log(1 - D(G(z)))]
 
 **Diskriminátor chce maximalizovat hodnotu V.**
 
-Diskriminátor je klasifikátor, kterému chceme, aby se dobře naučil rozlišovat reálná od falešných dat. V ideálním případě:
+Diskriminátor je klasifikátor, po kterém chceme, aby se dobře naučil rozlišovat reálná od falešných dat. V ideálním případě:
 
 - **Reálná data (x):** Diskriminátor by měl vrátit D(x) = 1 (rozpozná, že je to originál)
 - **Falešná data (G(z)):** Diskriminátor by měl vrátit D(G(z)) = 0 (rozpozná, že je to padělek)
