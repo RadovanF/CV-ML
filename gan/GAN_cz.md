@@ -10,24 +10,34 @@ Generative Adversarial Networks (GANy) jsou jedním z nejpopulárnějších a ne
 
 ```mermaid
 flowchart LR
-  Z["z ~ N(0,1)"]:::noise
-  X["x ~ reálná data"]:::real
-  G_out["G(z)"]:::gen
-  D_real["D(x)"]:::disc
-  D_fake["D(G(z))"]:::disc
+  %% Uzly - necháme je čistě matematické nebo stručné
+  Z("z ~ N(0,1)"):::noise
+  X("x ~ Dataset"):::real
+  
+  %% Zde G(z) reprezentuje výstup generátoru
+  G_out("G(z)"):::gen
+  
+  %% Výstupy diskriminátoru
+  D_real("D(x)"):::disc
+  D_fake("D(G(z))"):::disc
 
-  Z --> G_out
-  G_out --> D_fake
-  X --> D_real
+  %% Šipky s popisem DAT, která tečou
+  Z -- náhodný šum --> G_out
+  G_out -- fake data --> D_fake
+  X -- reálná data --> D_real
 
-  D_real -.-> D_opt["Trénink D"]
+  %% Zpětná vazba (loss)
+  D_real -.-> D_opt["Loss D"]
   D_fake -.-> D_opt
-  D_fake -.-> G_opt["Trénink G"]
+  D_fake -.-> G_opt["Loss G"]
 
+  %% Stylování
   classDef noise fill:#e0f7ff,stroke:#0099cc
   classDef real fill:#e8ffe8,stroke:#22aa22
   classDef gen fill:#fff3cd,stroke:#c99700
   classDef disc fill:#ffe0e0,stroke:#cc4444
+
+
 
 ```
 
