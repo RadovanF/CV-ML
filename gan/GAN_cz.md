@@ -2,7 +2,7 @@
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak základní GAN sítě fungují uvnitř.**
 > 
-> *(Jedná se o pracovní verzi, která může místy obsahovat nechtěné překlepy)*
+> *(Jedná se o pracovní verzi, proto prosím omluvte fakt, že se místy mohou objevit případné překlepy)*
 
 ## Úvod
 
