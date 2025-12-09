@@ -7,7 +7,7 @@
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém lokalizace řeší na úrovni jednotlivých buňek. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů (v YOLOv1 je B = 2).
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém lokalizace řeší na úrovni jednotlivých buněk. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů (v YOLOv1 je B = 2).
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
@@ -110,7 +110,7 @@ To znamená, že síť se sama učí rozpoznat rozdíl mezi "zde je objekt" (hig
 ---
 
 # Ukázka YOLOv1 modelu s VGG + pseudokód v PyTorch
-- Diagram originální sítě je ukázan níže, zde v pseudokódu je pro jednoduchost/názornost použit již existující VGG16 model z torchvision 
+- Diagram originální sítě je ukázán níže, zde v pseudokódu je pro jednoduchost/názornost použit již existující VGG16 model z torchvision 
 
 ### Část 1: Inicializace + definice modelu (Backbone + Head)
 
@@ -124,7 +124,7 @@ class YOLOv1Simple(nn.Module):
         super(YOLOv1Simple, self).__init__()
         
         # Konfigurace mřížky
-        self.S = 7           # Grid size (7×7 buňek)
+        self.S = 7           # Grid size (7×7 buněk)
         self.B = B           # Počet boxů na buňku (2 v originálním paperu)
         self.C = n_classes   # Počet tříd (20 pro PASCAL VOC)
 ```
@@ -511,7 +511,7 @@ def yolo_loss(predictions, targets):
 
 ### Princip
 
-- Vstupní obrázek se **rozdělí na SxS mřížku buňek** (např. 7×7)
+- Vstupní obrázek se **rozdělí na SxS mřížku buněk** (např. 7×7)
 - Každá buňka predikuje:
   - **Geometrii boxu** (regrese) - x, y, w, h
   - **Confidence** (regrese) - jistota, že je zde objekt
@@ -677,7 +677,7 @@ Toto je **klíčová inovace** pro detekci malých objektů.
 
 **Problém YOLOv2:**
 - Detekuje objekty **pouze na jedné úrovni** výstupu (13×13 pro 416 input)
-- Malé objekty se **ztácejí**, protože mřížka je příliš hrubá
+- Malé objekty se **ztrácejí**, protože mřížka je příliš hrubá
 
 **Řešení: Predikuj objekty na TŘECH různých měřítkách**
 
@@ -711,7 +711,7 @@ Toto je **klíčová inovace** pro detekci malých objektů.
   - K-means se aplikuje znovu na každou skupinu
 
 **Prakticky:** Pokud máme dataset s mnoha čtvercovými boxy:
-- YOLOv2 by měl jednu sadu kotev (např. 1:1, 2:1, 1:2, itd.)
+- YOLOv2 by měl jednu sadu kotev (např. 1:1, 2:1, 1:2, atd.)
 - YOLOv3 by měl:
   - Pro 13×13: kotvy optimalizované pro velké objekty
   - Pro 26×26: kotvy optimalizované pro střední objekty
@@ -751,8 +751,8 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 ### Klíčové Koncepty
 
 - **Bag of Freebies**: Triky pro **lepší trénink** 
-  - Různé druhy **data augmentace** (rotate, flip, color jitter, itd.)
-  - Nezvyšují výpočetní náklady během inferenece!
+  - Různé druhy **data augmentace** (rotate, flip, color jitter, atd.)
+  - Nezvyšují výpočetní náklady během inference!
 
 - **Bag of Specials**: **Speciální moduly/vrstvy** navíc v síti
   - SPP (Spatial Pyramid Pooling)
@@ -764,7 +764,7 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
   - Lepší gradient flow
 
 - **Mosaic Augmentation**: Skládání **4 obrázků do jednoho** pro trénink
-  - Během jedné iterace se model vidí 4 různé obrázky přiblížené
+  - Během jedné iterace model vidí 4 různé obrázky
   - Zvyšuje variance a učení
   - Model se učí kontext z více zdrojů
 
