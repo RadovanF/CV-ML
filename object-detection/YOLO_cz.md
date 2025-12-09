@@ -2,12 +2,12 @@
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak zejména YOLOv1 a navazující verze fungují uvnitř.**
 > 
-> *(Jedná se o pracovní verzi, která může místy obsahovat nechtěné překlepy)*
+> *(Jedná se o pracovní verzi, proto prosím omluvte fakt, že se místy mohou objevit nechtěné překlepy)*
 ---
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek) a problém lokalizace řeší na úrovni jednotlivých buňek. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů.
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém lokalizace řeší na úrovni jednotlivých buňek. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů (v YOLOv1 je B = 2).
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
