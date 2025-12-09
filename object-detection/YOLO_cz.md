@@ -47,7 +47,6 @@ Toto je klíčové - neuron v mřížce má **receptivní pole** (receptive fiel
 
 Aby se detektory v buňkách nehádaly ("Já to vidím!" - "Já taky!"), YOLO zavádí **striktní pravidlo**:
 
-### Pravidlo YOLOv1:
 **"Za objekt je zodpovědná POUZE ta buňka, do které padne STŘED objektu."**
 
 Praktické důsledky:
