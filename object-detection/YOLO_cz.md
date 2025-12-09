@@ -2,7 +2,7 @@
 
 > **Cílem není vytvořit funkční produkční kód, ale spíše "vyprávět příběh" o tom, jak zejména YOLOv1 a navazující verze fungují uvnitř.**
 > 
-> *(Jedná se o pracovní verzi, proto prosím omluvte fakt, že se místy mohou objevit případné překlepy)*
+> *(Jedná se o pracovní verzi, proto prosím omluvte fakt, že se místy mohou objevit případné překlepy.)*
 ---
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
