@@ -7,7 +7,7 @@
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek) a problém lokalizace řeší na úrovni jednotlivých buňek.
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek) a problém lokalizace řeší na úrovni jednotlivých buňek. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů.
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
