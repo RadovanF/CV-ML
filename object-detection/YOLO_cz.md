@@ -7,7 +7,7 @@
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek). Neřeší "kde je objekt" v pixelech, ale problém lokalizace řeší na úrovni jednotlivých buňek.
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buňek) a problém lokalizace řeší na úrovni jednotlivých buňek.
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
@@ -102,7 +102,7 @@ To znamená, že síť se sama učí rozpoznat rozdíl mezi "zde je objekt" (hig
 | **w, h** | Velikost objektu relativně vůči **celému obrázku** (0-1) |
 | **confidence** | Jak moc si je síť jistá, že zde má být objekt A jak dobře tam její box sedí (0-1) |
 
-### Detailnější Vysvětlení confidence
+### Detailnější vysvětlení confidence
 
 - V tréninku se učí jako IoU (Intersection over Union) mezi předpovídaným boxem a ground truth boxem
 - V inferenci se používá k filtrování slabých detekcí
