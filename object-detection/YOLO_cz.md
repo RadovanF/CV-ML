@@ -223,7 +223,7 @@ param.requires_grad = False  # Tyto váhy se nebudou učit
 4. **nn.Dropout(0.5)**:
    - Během tréninku: náhodně "vypíná" 50% neuronů
    - Během testování: bez efektu
-   - Regulárizuje model - zamezuje overfittingu
+   - Zamezuje overfittingu
 
 5. **nn.Linear(4096, 1470)**:
    - Finální výstup - 1470 hodnot (jak jsme spočítali)
