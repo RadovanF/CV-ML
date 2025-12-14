@@ -136,7 +136,7 @@ Celková chyba diskriminátora je:
 d_loss = Loss_real + Loss_fake
 ```
 
-Tato chyba odpovídá oběm členům v originálním vzorci V(D, G).
+Tato chyba odpovídá oběma členům v originálním vzorci V(D, G).
 
 #### Pro generátor:
 
