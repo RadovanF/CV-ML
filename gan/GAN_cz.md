@@ -165,7 +165,7 @@ Graficky si to představte jako rovinu - generátor "neví", kterým směrem se 
 
 Místo abychom minimalizovali: `log(1 - D(G(z)))`
 
-Raději **maximalizujeme**: `-log(D(G(z)))`
+Raději **maximalizujeme**: `log(D(G(z)))`
 
 V kódu to znamená minimalizaci: `-log(D(G(z)))`
 
