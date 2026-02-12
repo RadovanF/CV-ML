@@ -15,7 +15,7 @@ source .venv/bin/activate
 ```
 
 ### Instalace knihoven
-Pro začátek potřebujeme `opencv-python` (pro cv2) a `matplotlib` (pro grafy).
+Pro začátek potřebujeme `opencv-python` (pro prací s obrazem) a `matplotlib` (pro grafy).
 ```bash
 pip install opencv-python matplotlib
 ```
