@@ -47,16 +47,10 @@ Při použití čistého HTML/CSS je vývojář zodpovědný za definici všech 
       background-color: #50c8ff;
       color: #000;
       padding: 10px 20px;
-      border: 1px solid #000;
+      border: 1px solid;
       border-radius: 4px;
-      cursor: pointer;
       margin-top: 10px;
       font-weight: bold;
-    }
-    
-    /* Definice stavu při kliknutí */
-    .custom-button:active {
-      background-color: #3aa0cc;
     }
   </style>
 </head>
