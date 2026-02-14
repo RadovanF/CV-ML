@@ -104,7 +104,7 @@ V tomto příkladu je použita knihovna Ionic.
     <ion-content class="ion-padding">
       
       <h2>2. Ionic Komponenty</h2>
-      <p>Ukázka použití vlastnosti trigger a předdefinovaných komponent.</p>
+      <p>Ukázka použití předdefinovaných komponent.</p>
       
       <ion-button id="alert-trigger" expand="block">
         Otevřít Ionic Alert
@@ -140,10 +140,10 @@ V tomto příkladu je použita knihovna Ionic.
 
 **HTML kód:**
 ```html
-<div class="form-group">
-  <label for="name">Jméno:</label>
-  <input type="text" id="name" placeholder="Jan Novák">
-</div>
+<form>
+  <label for="fname">Jméno:</label><br>
+  <input type="text" id="fname" name="fname"><br><br>
+</form>
 ```
 
 **Ionic kód:**
