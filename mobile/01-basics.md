@@ -175,7 +175,7 @@ Při vývoji mobilních aplikací v prohlížeči využíváme **Vývojářské 
 Testování na reálném HW.
 
 1.  **Povolit vývojářské možnosti na telefonu**:
-    - *Nastavení > Informace o telefonu > Číslo sestavení* (7x poklepat).
+    - *Nastavení > Informace o telefonu > Číslo sestavení* (několikrát poklepat).
     - V novém menu *Vývojářské možnosti* povolit **Ladění USB**.
 2.  **Propojení**: Připojte telefon k PC přes USB kabel.
 3.  **Chrome Inspector**:
