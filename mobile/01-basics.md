@@ -183,7 +183,5 @@ Testování na reálném HW.
     - Uvidíte připojené zařízení a seznam otevřených tabů.
 
 ### 3. Další nástroje pro vývoj a testování
-Kromě standardních nástrojů existují i specializovaná řešení:
-
-*   **Monaca**: Cloudové IDE a sada nástrojů, která umožňuje vyvíjet a ladit Ionic aplikace v cloudu bez konfigurace lokálního prostředí. Nabízí vlastní aplikaci pro live-preview na telefonu.
 *   **WebNative**: Rozšíření pro VS Code (WebNative VS Code Extension), které integruje nástroje pro Ionic a Capacitor přímo do editoru. Pomáhá s generováním ikon, spouštěním na zařízeních a laděním.
+*   **Monaca**: Cloudové IDE a sada nástrojů, která umožňuje vyvíjet a ladit Ionic aplikace v cloudu bez konfigurace lokálního prostředí. Nabízí vlastní aplikaci pro live-preview na telefonu.
