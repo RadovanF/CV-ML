@@ -44,19 +44,25 @@ Sobelův operátor je využíván k detekci hran pomocí konvoluce. Jsou aplikov
 
 **1. Horizontální gradient ($G_x$):**
 Je jím reagováno na vertikální hrany (změna jasu v ose x).
-$$G_x = \begin{bmatrix} 
+
+$$
+G_x = \begin{bmatrix} 
 -1 & 0 & 1 \\ 
 -2 & 0 & 2 \\ 
 -1 & 0 & 1 
-\end{bmatrix}$$
+\end{bmatrix}
+$$
 
 **2. Vertikální gradient ($G_y$):**
 Je jím reagováno na horizontální hrany (změna jasu v ose y).
-$$G_y = \begin{bmatrix} 
+
+$$
+G_y = \begin{bmatrix} 
 -1 & -2 & -1 \\ 
 0 & 0 & 0 \\ 
 1 & 2 & 1 
-\end{bmatrix}$$
+\end{bmatrix}
+$$
 
 ### Příklad výpočtu
 Pro výřez obrazu $A$, kde je vlevo lokalizována tmavší oblast (hodnota 10) a vpravo oblast světlejší (hodnota 200) – tedy svislá hrana:
