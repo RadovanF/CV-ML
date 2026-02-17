@@ -36,7 +36,7 @@ Metoda stojí na čtyřech hlavních pilířích:
 ### A. Haarovy příznaky (Haar Features)
 Místo práce s jednotlivými pixely využívá algoritmus rozdíly v jasu mezi sousedními obdélníkovými oblastmi. Tyto příznaky připomínají Haarovy vlnky.
 
-* **Princip:** $Hodnota = \sum(černé\_pixely) - \sum(bílé\_pixely)$
+* **Princip:** $Hodnota = \sum(černé pixely) - \sum(bílé pixely)$
 * **Typy příznaků:**
     * *Hranové (Edge):* Detekují přechod mezi tmavou a světlou oblastí (např. obočí vs. čelo).
     * *Liniové (Line):* Detekují tmavý pruh mezi dvěma světlými (např. rty) nebo naopak (např. hřbet nosu).
