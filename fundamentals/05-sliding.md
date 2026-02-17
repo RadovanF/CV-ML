@@ -39,7 +39,7 @@ Místo práce s jednotlivými pixely využívá algoritmus rozdíly v jasu mezi 
 * **Princip:** $\text{Hodnota} = \sum(\text{černé pixely}) - \sum(\text{bílé pixely})$
 * **Typy příznaků:**
     * *Hranové (Edge):* Detekují přechod mezi tmavou a světlou oblastí (např. obočí vs. čelo).
-    * *Liniové (Line):* Detekují tmavý pruh mezi dvěma světlými (např. rty) nebo naopak (např. hřbet nosu).
+    * *Pruhové/Liniové (Line):* Detekují tmavý pruh mezi dvěma světlými (např. rty) nebo naopak (např. hřbet nosu).
     * *Čtyř-obdélníkové:* Pro diagonální detaily.
 
 ### B. Integrální obraz (Integral Image)
