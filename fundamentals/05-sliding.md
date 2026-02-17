@@ -1,6 +1,6 @@
 # Detekce a rozpoznávání objektů – Tradiční metody (Haar, HOG, LBP, SVM)
 
-Tento text slouží jako studijní materiál k základům detekce a rozpoznávání objektů v počítačovém vidění. Pokrývá tradiční metody: detekci obličejů pomocí Haarových příznaků (Viola-Jones), deskriptory HOG a LBP, klasifikátory SVM a AdaBoost a rozpoznávání obličejů pomocí LBP histogramů.
+Tento text slouží jako podpůrný studijní materiál k základům detekce a rozpoznávání objektů v počítačovém vidění. Pokrývá tradiční metody: detekci obličejů pomocí Haarových příznaků (Viola-Jones), deskriptory HOG a LBP, klasifikátory SVM a AdaBoost a rozpoznávání obličejů pomocí LBP histogramů.
 
 ## 1. Co je to detekce objektů?
 
