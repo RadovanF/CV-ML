@@ -34,6 +34,45 @@ $$g(x, y) = \sum_{i=-k}^{k} \sum_{j=-k}^{k} f(x-i, y-j) \cdot h(i, j)$$
 
 *(Poznámka: V softwarových implementacích je často reálně prováděna operace korelace, kdy maska není před výpočtem středově převrácena. U symetrických masek (které budeme v rámci kurzu používat nejčastěji) je výsledek obou matematických operací totožný).*
 
+### Příklad výpočtu konvoluce
+
+Mějme výřez obrazu $f$ o velikosti $3 \times 3$, který obsahuje svislou světlou hranu, a symetrickou masku $h$ pro detekci hran (Laplaceův operátor). Počítáme novou hodnotu pro **středový pixel**.
+
+**1. Vstupní data**
+
+Výřez obrazu $f$ (světlá hrana uprostřed):
+$$
+\begin{bmatrix} 
+10 & 100 & 10 \\ 
+10 & 100 & 10 \\ 
+10 & 100 & 10 
+\end{bmatrix}
+$$
+
+Maska $h$:
+$$
+\begin{bmatrix} 
+0 & -1 & 0 \\ 
+-1 & 4 & -1 \\ 
+0 & -1 & 0 
+\end{bmatrix}
+$$
+
+**2. Postup výpočtu**
+
+Protože je maska symetrická, vynásobíme hodnoty obrazu a masky na stejných pozicích a vše sečteme:
+
+$$g = (10 \cdot 0) + (100 \cdot -1) + (10 \cdot 0)$$
+$$+ (10 \cdot -1) + (100 \cdot 4) + (10 \cdot -1)$$
+$$+ (10 \cdot 0) + (100 \cdot -1) + (10 \cdot 0)$$
+
+**3. Výsledek**
+
+$$g = 0 - 100 + 0 - 10 + 400 - 10 + 0 - 100 + 0$$
+$$g = 180$$
+
+Nová hodnota středového pixelu je **180**. Kladné a vysoké číslo jasně ukazuje, že v tomto místě byla úspěšně detekována výrazná hrana.
+
 ---
 
 ## 3. Sobelův detektor
