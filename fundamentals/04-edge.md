@@ -41,6 +41,7 @@ Mějme výřez obrazu $f$ o velikosti $3 \times 3$, který obsahuje svislou svě
 **1. Vstupní data**
 
 Výřez obrazu $f$ (světlá hrana uprostřed):
+
 $$
 \begin{bmatrix} 
 10 & 100 & 10 \\ 
@@ -50,6 +51,7 @@ $$
 $$
 
 Maska $h$:
+
 $$
 \begin{bmatrix} 
 0 & -1 & 0 \\ 
