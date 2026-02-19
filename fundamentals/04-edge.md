@@ -125,7 +125,7 @@ Hodnoty $G_x$ a $G_y$ jsou následně využívány pro výpočet celkové síly 
 
 1.  **Velikost hrany (Magnituda):**
     $$G = \sqrt{G_x^2 + G_y^2}$$
-2.  **Úhel:**
+2.  **Úhel gradientu:**
     $$\theta = \arctan\left(\frac{G_y}{G_x}\right)$$
 
 ---
