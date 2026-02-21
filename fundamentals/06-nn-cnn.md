@@ -24,7 +24,7 @@ výstup = f(w₁·x₁ + w₂·x₂ + ... + wₙ·xₙ + b)
 
 ### Proč aktivační funkce?
 
-<img src="nn-activ.png" alt="Aktivační funkce" width="600" />
+<img src="imgs/nn-activ.png" alt="Aktivační funkce" width="600" />
 
 Bez aktivační funkce by celá síť — bez ohledu na počet vrstev — počítala jen
 **lineární rovnici** (přímka, rovina). Lineární funkce nedokáže modelovat složité vzory.
