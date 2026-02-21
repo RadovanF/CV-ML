@@ -270,7 +270,6 @@ Vstupní obraz → Prahování → Morfologie (opening/closing) → connectedCom
 
 Morfologické operace se aplikují před `connectedComponents()`, aby se odstranily šumové pixely (které by jinak tvořily samostatné oblasti) a aby se spojily fragmentované objekty.
 
-<img src="imgs/morph-final.png" width="600" />
 
 ### Základní použití
 
