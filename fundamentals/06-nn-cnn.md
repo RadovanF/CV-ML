@@ -9,7 +9,7 @@ Neuronová síť je matematický model inspirovaný fungováním mozku. Skládá
 
 ### Jeden neuron
 
-<img src="nn-basic.png" alt="Základní neuron" width="500" />
+<img src="imgs/nn-basic.png" alt="Základní neuron" width="500" />
 
 Základní funkce neuronu:
 
@@ -40,7 +40,7 @@ Záporné hodnoty nás prostě nezajímají: reprezentují "neuron, který na da
 
 ## 2. Vrstvy a dopředná síť (MLP)
 
-<img src="nn-mlp.png" alt="Architektura dopředné sítě" width="500" />
+<img src="imgs/nn-mlp.png" alt="Architektura dopředné sítě" width="500" />
 
 Neurony jsou organizovány do **vrstev**:
 
@@ -56,7 +56,7 @@ V PyTorch jednu plně propojenou vrstvu vyjadřuje `nn.Linear(in_features, out_f
 
 ## 3. Jak se síť učí?
 
-<img src="nn-steps.png" alt="Trénovací cyklus" width="500" />
+<img src="imgs/nn-steps.png" alt="Trénovací cyklus" width="500" />
 
 Učení probíhá opakováním těchto kroků:
 
@@ -167,7 +167,7 @@ print(f"Přesnost na testovacích datech: {accuracy*100:.2f}%")
 ```
 Vizualizace  `nn.Flatten()`
 
-<img src="cnn-flatten.png" alt="Flatten operace" width="500" />
+<img src="imgs/cnn-flatten.png" alt="Flatten operace" width="500" />
 
 
 
@@ -231,7 +231,7 @@ Při definici konvoluční vrstvy `nn.Conv2d` v kódu určujeme tyto technické 
 - Padding: Doplnění okrajů obrázku (obvykle nulami), aby výstupní mapa nebyla menší než vstup.
 
 
-<img src="cnn-nnconv2d.png" alt="Základní neuron" width="800" />
+<img src="imgs/cnn-nnconv2d.png" alt="Základní neuron" width="800" />
 
 
 ---
@@ -253,7 +253,7 @@ Pooling 2×2 v tomto případě zmenší rozměry na polovinu. Má tři výhody:
 
 ## 3. Celková architektura CNN
 
-<img src="cnn-arch.png" alt="Schéma CNN architektury" width="600" />
+<img src="imgs/cnn-arch.png" alt="Schéma CNN architektury" width="600" />
 
 ```text
 Vstup (obrázek)
