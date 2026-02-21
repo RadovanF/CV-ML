@@ -68,7 +68,7 @@ mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
 
 Jednokanálová reprezentace obrázku, kde každý pixel představuje intenzitu (jas) na škále od černé (0) do bílé (255).
 
-<img src="imgs/morph-gray.png" width="500" />
+<img src="imgs/morph-gray.png" width="400" />
 
 ```python
 # Konverze BGR na stupně šedi
@@ -80,6 +80,8 @@ gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 Prahování je nejjednodušší metoda segmentace. Slouží k oddělení oblastí obrázku odpovídajících objektů, které chceme analyzovat.
 
 ### Binární prahování (Binary Threshold)
+
+<img src="imgs/morph-thresh.png" width="400" />
 
 ```python
 # Binary Threshold
@@ -132,6 +134,8 @@ Eroze zmenšuje objekty v obraze. Pixel v původním obraze bude považován za 
 - Oddělení objektů
 - Zjednodušení hranic
 
+<img src="imgs/morph-eroze.png" width="300" />
+
 ```python
 # Načtení obrázku
 img_input = cv2.imread('img.png', 0)
@@ -159,6 +163,8 @@ Dilatace je opakem eroze - pixel je '1' pokud je alespoň jeden pixel pod kernel
 - Spojení blízkých objektů
 - Rozšíření hranic objektů
 
+<img src="imgs/morph-dilatace.png" width="300" />
+
 ```python
 # Dilatace
 img_dilate = cv2.dilate(img_th, kernel, iterations=1)
@@ -167,6 +173,8 @@ img_dilate = cv2.dilate(img_th, kernel, iterations=1)
 ### Opening (Otevření)
 
 Opening = eroze následovaná dilatací. Odstraňuje malý šum zachováním větších objektů.
+
+<img src="imgs/morph-open.png" width="400" />
 
 ```python
 # Opening - odstranění šumu
@@ -180,6 +188,8 @@ img_opening_manual = cv2.dilate(cv2.erode(img_th, kernel), kernel)
 
 Closing = dilatace následovaná erozí. Vyplňuje malé mezery v objektech.
 
+<img src="imgs/morph-close.png" width="400" />
+
 ```python
 # Closing - vyplnění mezer
 img_closing = cv2.morphologyEx(img_th, cv2.MORPH_CLOSE, kernel)
@@ -191,6 +201,9 @@ img_closing_manual = cv2.erode(cv2.dilate(img_th, kernel), kernel)
 ### Morfologický gradient
 
 Rozdíl mezi dilatací a erozí obrazu. Zvýrazňuje hrany objektů.
+
+<img src="imgs/morph-grad.png" width="400" />
+
 
 ```python
 # Morfologický gradient - detekce hran
@@ -249,6 +262,8 @@ plt.show()
 
 K označení (labelování) souvislých oblastí v binárním obraze je možné využít například funkci `cv2.connectedComponents()`. Každé skupině propojených bílých pixelů je přiřazen unikátní celočíselný identifikátor (label). Pozadí má label `0`.
 
+<img src="imgs/morph-label.png" width="600" />
+
 ### Typický pipeline
 
 ```
@@ -257,6 +272,7 @@ Vstupní obraz → Prahování → Morfologie (opening/closing) → connectedCom
 
 Morfologické operace se aplikují před `connectedComponents()`, aby se odstranily šumové pixely (které by jinak tvořily samostatné oblasti) a aby se spojily fragmentované objekty.
 
+<img src="imgs/morph-final.png" width="300" />
 
 ### Základní použití
 
