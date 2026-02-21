@@ -12,6 +12,8 @@ RGB je aditivní barevný prostor, kde se barvy vytvářejí kombinací intenzit
 - `(0,0,255)` - Čistá modrá
 - `(255,255,0)` - Žlutá (červená + zelená)
 
+<img src="imgs/morph-rgb.png" width="500" />
+
 ```python
 import cv2
 import numpy as np
@@ -41,6 +43,8 @@ HSV odděluje informaci o barvě (hue) od intenzity (value) a saturace. Je to vh
 - **Saturation** - Čistota barvy
 - **Value** - Jas/intenzita barvy
 
+<img src="imgs/morph-hsv.png" width="300" />
+
 ```python
 # Konverze BGR na HSV
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -63,6 +67,8 @@ mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
 ### Grayscale (Stupně šedi)
 
 Jednokanálová reprezentace obrázku, kde každý pixel představuje intenzitu (jas) na škále od černé (0) do bílé (255).
+
+<img src="imgs/morph-gray.png" width="500" />
 
 ```python
 # Konverze BGR na stupně šedi
