@@ -68,8 +68,6 @@ mask = cv2.inRange(hsv_image, lower_bound, upper_bound)
 
 Jednokanálová reprezentace obrázku, kde každý pixel představuje intenzitu (jas) na škále od černé (0) do bílé (255).
 
-<img src="imgs/morph-gray.png" width="400" />
-
 ```python
 # Konverze BGR na stupně šedi
 gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
