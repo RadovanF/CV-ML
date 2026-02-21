@@ -260,7 +260,7 @@ plt.show()
 
 K označení (labelování) souvislých oblastí v binárním obraze je možné využít například funkci `cv2.connectedComponents()`. Každé skupině propojených bílých pixelů je přiřazen unikátní celočíselný identifikátor (label). Pozadí má label `0`.
 
-<img src="imgs/morph-label.png" width="600" />
+<img src="imgs/morph-label.png" width="300" />
 
 ### Typický pipeline
 
@@ -270,7 +270,7 @@ Vstupní obraz → Prahování → Morfologie (opening/closing) → connectedCom
 
 Morfologické operace se aplikují před `connectedComponents()`, aby se odstranily šumové pixely (které by jinak tvořily samostatné oblasti) a aby se spojily fragmentované objekty.
 
-<img src="imgs/morph-final.png" width="300" />
+<img src="imgs/morph-final.png" width="600" />
 
 ### Základní použití
 
