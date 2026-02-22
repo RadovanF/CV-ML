@@ -99,14 +99,6 @@ SVM je algoritmus strojového učení používaný pro klasifikaci (rozhodnutí,
 * **Princip:** Snaží se najít optimální hranici (nadrovinu), která odděluje data dvou tříd (např. "obličej" a "ne-obličej") s co největším odstupem (marginem).
 * **Support Vectors:** Jsou to klíčové body dat, které leží nejblíže dělící hranici a definují její polohu.
 * **Jádrový trik (Kernel trick):** Pokud data nelze oddělit rovnou čárou, SVM je umí převést do vyšší dimenze, kde oddělitelná jsou.
-
-### Deep Learning (Hluboké učení)
-V současnosti v oboru dominují hluboké neuronové sítě. Oproti tradičním metodám (kde je nutné ručně definovat příznaky jako Haar nebo HOG) se sítě učí příznaky automaticky přímo z dat.
-* **CNNs (Konvoluční neuronové sítě):** Základ detekce a rozpoznávání v deep learning přístupu.
-* **YOLO / SSD:** Detektory schopné najít objekty v jediném průchodu sítí.
-
-> **Poznámka:** Deep learning přístupy přesahují rozsah tohoto textu (budou řešeny v dalších materiálech). Zde jsou uvedeny pro kontext a srovnání s tradičními metodami.
-
 ---
 
 ## 5. Rozpoznávání obličejů (Face Recognition)
@@ -211,3 +203,9 @@ n_points = 8        # Počet sousedních bodů (8 pro základní LBP)
 lbp = local_binary_pattern(img, n_points, radius, method='uniform')
 # method='uniform' omezí počet příznaků na tzv. uniform patterns
 ```
+### 7. Deep Learning (Hluboké učení)
+V současnosti v oboru dominují hluboké neuronové sítě. Oproti tradičním metodám (kde je nutné ručně definovat příznaky jako Haar nebo HOG) se sítě učí příznaky automaticky přímo z dat.
+* **CNNs (Konvoluční neuronové sítě):** Základ detekce a rozpoznávání v deep learning přístupu.
+* **YOLO / SSD:** Detektory schopné najít objekty v jediném průchodu sítí.
+
+> **Poznámka:** Deep learning přístupy přesahují rozsah tohoto textu (budou řešeny v dalších materiálech). Zde jsou uvedeny pro kontext a srovnání s tradičními metodami.
