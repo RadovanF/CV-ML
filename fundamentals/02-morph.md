@@ -80,26 +80,13 @@ Prahování je nejjednodušší metoda segmentace. Slouží k oddělení oblast�
 <img src="imgs/morph-thresh.png" width="400" />
 
 ```python
-# Binary Threshold
-# dst(x,y) = maxVal if src(x,y) > thresh, else 0
-
+# Binární prahování
+# Pokud je pixel světlejší než práh (127), obarví se na bílo (255). Všechno tmavší bude černé (0).
 ret, thresh_binary = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
 
-# Binary Threshold Inverted
-# dst(x,y) = 0 if src(x,y) > thresh, else maxVal
-
+# Invertované binární prahování (obrácené)
+# Pokud je pixel světlejší než práh (127), obarví se na černo (0). Všechno tmavší bude bílé (255).
 ret, thresh_binary_inv = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY_INV)
-
-# Příklad s různými prahovými hodnotami
-img_input = cv2.imread('img.png', 0)
-th_values = [50, 100, 150, 200]
-
-for th in th_values:
-    ret, thresholded = cv2.threshold(img_input, th, 255, cv2.THRESH_BINARY_INV)
-    plt.figure()
-    plt.imshow(thresholded, cmap='gray')
-    plt.title(f'Threshold: {th}')
-    plt.show()
 ```
 
 ## Morfologické operace
