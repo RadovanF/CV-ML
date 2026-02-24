@@ -1,5 +1,3 @@
-# Barevné prostory a morfologické operace
-
 ## Barevné prostory (Color Spaces)
 
 ### RGB (Red, Green, Blue)
