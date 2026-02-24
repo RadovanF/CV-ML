@@ -301,7 +301,22 @@ num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary)
 # centroids[i] obsahuje (x, y) těžiště oblasti i
 ```
 
+## Kam dál: Moderní přístupy k segmentaci
 
+Klasické metody analýzy obrazu (kombinace: barevné prostory, prahování, morfologické operace) mají v počítačovém vidění stále své místo - jsou rychlé, výpočetně nenáročné a fungují ihned bez nutnosti složitě sbírat a anotovat data. 
+
+Pokud ale klasické metody nestačí, přichází na řadu modely hlubokého učení (Deep Learning). Mezi ty nejzajímavější v oblasti segmentace dnes patří:
+
+* **U-Net:** Architektura (a její další varianty, např. UNet++) původně navržená pro medicínské snímky, dnes jde o standard pro přesnou sémantickou segmentaci na úrovni pixelů.
+
+*[Více o U-Net](https://arxiv.org/abs/1505.04597)*
+
+* **Segment Anything Model (SAM 1, 2, 3):** Výkonný model od společnosti Meta. Dokáže automaticky vyříznout (segmentovat) jakýkoliv objekt na obrázku bez předchozího specifického trénování (tzv. zero-shot přístup).
+
+*[Oficiální web Segment Anything](https://segment-anything.com/)*
+
+* **Ultralytics:** Populární knihovna známá především pro detektory YOLO. Dnes už ale přímo integruje i modely jako SAM, což umožňuje jejich extrémně snadné nasazení pomocí kódu v Pythonu.
+*[Dokumentace Ultralytics pro model SAM](https://docs.ultralytics.com/models/sam/)*
 
 ## Reference
 
