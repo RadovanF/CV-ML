@@ -141,7 +141,7 @@ Pro odstranění šumu je na vstupní obraz aplikován Gaussův filtr.
 Pomocí konvolučních operátorů (typicky Sobelova) je získána magnituda $G$ a směr gradientu $\theta$.
 
 ### Krok 3: Potlačení nemaxim (Non-maximum suppression)
-Algoritmem je obraz analyzován a tloušťka detekovaných hran je redukována. Ve směru vypočítaného gradientu (kolmo na detekovanou hranu) je kontrolováno, zda je analyzovaný pixel lokálním maximem. Pixely, u kterých není identifikováno lokální maximum, jsou nastaveny na nulu. Výsledkem jsou hrany o tloušťce jednoho pixelu.
+Nalezené hrany jsou v této fázi zbytečně tlusté. Algoritmus proto projde šířku každé hrany (k tomu využívá velikost a směr gradientu z předchozího kroku) a nechá jen ten absolutně nejsilnější bod uprostřed - zbytek odstraní. Výsledkem jsou hrany o tloušťce jednoho pixelu.
 
 ### Krok 4: Hystereze (Dvojité prahování)
 Pro finální klasifikaci hran jsou definovány dva prahy ($T_{min}$ a $T_{max}$):
