@@ -165,19 +165,19 @@ V architekturách konvolučních neuronových sítí nejsou konvoluční masky d
 Než začneme hledat hrany, je velmi často vhodné obraz vyčistit od šumu, aby program nedetekoval falešné hrany. 
 Pro každý typ filtrace nabízí knihovna OpenCV přímo konkrétní funkci.
 
-### Obyčejné rozostření (Blur)
+### Rozostření (blur)
 
 Tato metoda zprůměruje hodnoty všech sousedních pixelů v dané oblasti, což zajistí základní rozostření obrazu. 
 Je to rychlý postup, ale může hrany nechtěně příliš rozmazat. 
 Příslušná OpenCV funkce`blur()`.
 
-### Gaussovský filtr
+### Gaussovský filtr (GaussianBlur)
 
 Tento filtr počítá vážený průměr okolních pixelů, přičemž body blíže ke středu mají na výsledek větší vliv. 
 Tím vzniká přirozenější rozostření, které je shopno do určité míry potlačit drobný šum a detaily. 
 Příslušná OpenCV funkce je `GaussianBlur()`.
 
-### Mediánový filtr
+### Mediánový filtr (medianBlur)
 
 Místo průměrování tento filtr seřadí hodnoty okolních pixelů a vybere z nich prostřední hodnotu (medián). 
 S tímto filtrem je tak možné odstranit izolované hodnoty (šum typu "sůl a pepř"). 
