@@ -162,15 +162,26 @@ V architekturách konvolučních neuronových sítí nejsou konvoluční masky d
 
 ## 6. Filtrace a redukce šumu
 
-Před zahájením procesu detekce hran je z důvodu přítomnosti šumu v obrazových datech vyžadována přípravná filtrace obrazu. Aplikací detektorů bez předchozí filtrace je vyvolána detekce falešných hran.
+Než začneme hledat hrany, je velmi často vhodné obraz vyčistit od šumu, aby program nedetekoval falešné hrany. 
+Pro každý typ filtrace nabízí knihovna OpenCV přímo konkrétní funkci.
+
+### Obyčejné rozostření (Blur)
+
+Tato metoda zprůměruje hodnoty všech sousedních pixelů v dané oblasti, což zajistí základní rozostření obrazu. 
+Je to rychlý postup, ale může hrany nechtěně příliš rozmazat. 
+Příslušná OpenCV funkce`blur()`.
 
 ### Gaussovský filtr
-Okolí každého pixelu je váženě zprůměrováno podle 2D Gaussova rozdělení.
-* **Efekt:** Je dosaženo prostorového rozostření obrazu a potlačení vysokofrekvenčního šumu a drobných detailů.
+
+Tento filtr počítá vážený průměr okolních pixelů, přičemž body blíže ke středu mají na výsledek větší vliv. 
+Tím vzniká přirozenější rozostření, které je shopno do určité míry potlačit drobný šum a detaily. 
+Příslušná OpenCV funkce je `GaussianBlur()`.
 
 ### Mediánový filtr
-Hodnoty pixelů v definovaném okolí jsou seřazeny a je vybrána hodnota mediánu.
-* **Efekt:** Filtr je implementován pro odstranění šumu typu "sůl a pepř". Na rozdíl od Gaussova filtru jsou jím lépe zachovány ostré přechody (hrany) v obraze.
+
+Místo průměrování tento filtr seřadí hodnoty okolních pixelů a vybere z nich prostřední hodnotu (medián). 
+S tímto filtrem je tak možné odstranit izolované hodnoty (šum typu "sůl a pepř"). 
+Příslušná OpenCV funkce `medianBlur()`.
 
 ---
 
