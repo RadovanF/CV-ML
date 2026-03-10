@@ -176,7 +176,7 @@ Hodnoty pixelů v definovaném okolí jsou seřazeny a je vybrána hodnota medi�
 
 ## 7. Praktická ukázka (Python & OpenCV)
 
-Níže je uvedena softwarová implementace algoritmu využívající knihovnu OpenCV.
+Níže je uvedena ukázka vybraných metod s využitím knihovny OpenCV.
 
 ```python
 import cv2
@@ -192,7 +192,7 @@ else:
     # 2. Filtrace (Gaussovský filtr s maskou 5x5)
     img_blur = cv2.GaussianBlur(img, (5, 5), 0)
 
-    # 3. Sobelova detekce
+    # 3. Sobelova detekce hran
     # Datový typ cv2.CV_64F je využit pro zachování záporných hodnot derivací
     sobel_x = cv2.Sobel(img_blur, cv2.CV_64F, 1, 0, ksize=3)
     sobel_y = cv2.Sobel(img_blur, cv2.CV_64F, 0, 1, ksize=3)
