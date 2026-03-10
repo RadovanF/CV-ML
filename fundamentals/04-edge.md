@@ -36,7 +36,7 @@ $$g(x, y) = \sum_{i=-k}^{k} \sum_{j=-k}^{k} f(x-i, y-j) \cdot h(i, j)$$
 
 ### Příklad výpočtu konvoluce
 
-Mějme výřez obrazu $f$ o velikosti $3 \times 3$, který obsahuje svislou světlou hranu, a symetrickou masku $h$ pro detekci hran (Laplaceův operátor). Počítáme novou hodnotu pro **středový pixel**.
+Mějme výřez obrazu $f$ o velikosti $3 \times 3$, který obsahuje svislou světlou hranu, a symetrickou masku $h$. Počítáme novou hodnotu pro **středový pixel**.
 
 **1. Vstupní data**
 
@@ -73,7 +73,7 @@ $$+ (10 \cdot 0) + (100 \cdot -1) + (10 \cdot 0)$$
 $$g = 0 - 100 + 0 - 10 + 400 - 10 + 0 - 100 + 0$$
 $$g = 180$$
 
-Nová hodnota středového pixelu je **180**. Kladné a vysoké číslo jasně ukazuje, že v tomto místě byla úspěšně detekována výrazná hrana.
+Nová hodnota středového pixelu je **180**.
 
 ---
 
@@ -193,9 +193,20 @@ else:
     img_blur = cv2.GaussianBlur(img, (5, 5), 0)
 
     # 3. Sobelova detekce hran
+    # Ruční definice matic (jader) pro Sobelův operátor
+    kernel_x = np.array([[-1, 0, 1],
+                         [-2, 0, 2],
+                         [-1, 0, 1]], dtype=np.float32)
+
+    kernel_y = np.array([[-1, -2, -1],
+                         [ 0,  0,  0],
+                         [ 1,  2,  1]], dtype=np.float32)
+
+    # Použití funkce filter2D s ručně definovanými maticemi
     # Datový typ cv2.CV_64F je využit pro zachování záporných hodnot derivací
-    sobel_x = cv2.Sobel(img_blur, cv2.CV_64F, 1, 0, ksize=3)
-    sobel_y = cv2.Sobel(img_blur, cv2.CV_64F, 0, 1, ksize=3)
+    # (Alternativně lze pro tento výpočet použít přímo funkci cv2.Sobel v OpenCV)
+    sobel_x = cv2.filter2D(img_blur, cv2.CV_64F, kernel_x)
+    sobel_y = cv2.filter2D(img_blur, cv2.CV_64F, kernel_y)
 
     # Výpočet magnitudy hrany
     sobel_magnitude = np.sqrt(sobel_x**2 + sobel_y**2)
