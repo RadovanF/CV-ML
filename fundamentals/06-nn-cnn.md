@@ -90,6 +90,10 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
+# Nastavení výpočetního zařízení (GPU pokud je k dispozici, jinak CPU)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Používám zařízení: {device}")
+
 # --- 1. Načtení dat ---
 transform = transforms.Compose([
     transforms.ToTensor(),                   # hodnoty 0–255 → 0.0–1.0
@@ -127,7 +131,7 @@ class Net(nn.Module):
         x = self.fc2(x)                   # poslední vrstva bez aktivace — CrossEntropyLoss ji obsahuje
         return x
 
-model = Net()
+model = Net().to(device)
 
 # --- 3. Loss funkce a optimizer ---
 loss_fn   = nn.CrossEntropyLoss()
@@ -142,7 +146,8 @@ EPOCHS = 5
 for epoch in range(1, EPOCHS + 1):
     model.train()
     total_loss = 0
-    for images, labels in train_loader:      # každá iterace = jedna dávka 64 obrázků
+    for images, labels in train_loader:      # dávka 64 obrázků
+        images, labels = images.to(device), labels.to(device)
         predictions = model(images)          # dopředný průchod
         loss = loss_fn(predictions, labels)  # výpočet chyby
         # aktualizace vah (3 kroky, vždy ve stejném pořadí):
@@ -167,6 +172,7 @@ correct = 0
 total   = 0
 with torch.no_grad():
     for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
         predictions = model(images)
         _, predicted = torch.max(predictions, 1)
         correct += (predicted == labels).sum().item()
@@ -363,7 +369,7 @@ EPOCHS = 5
 for epoch in range(1, EPOCHS + 1):
     model.train()
     total_loss = 0
-    for images, labels in train_loader:      # každá iterace = jedna dávka 64 obrázků
+    for images, labels in train_loader:      # dávka 64 obrázků
         predictions = model(images)          # dopředný průchod
         loss = loss_fn(predictions, labels)  # výpočet chyby
         # aktualizace vah (3 kroky, vždy ve stejném pořadí):
