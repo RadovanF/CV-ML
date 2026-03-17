@@ -96,8 +96,19 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))     # normalizace na -1.0–1.0
 ])
 
+# dataset FashionMNIST je součástí torchvision
 train_data = datasets.FashionMNIST(root='./data', train=True,  download=True, transform=transform)
 test_data  = datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
+
+# POZNÁMKA: Pokud je potřeba načítat vlastní obrázky z adresáře,
+# kde jsou rozdělené do složek podle tříd (např. data/cats, data/dogs),
+# je možné použít datasets.ImageFolder:
+# 
+# my_train_data = datasets.ImageFolder(root='cesta/k/datum', transform=transform)
+# train_loader  = DataLoader(my_train_data, batch_size=64, shuffle=True)
+#
+# Pro složitější případy (např. labely v CSV) se definuje vlastní třída dědící z Dataset.
+
 
 # DataLoader rozdělí data do dávek — každá dávka (batch) má 64 obrázků
 train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
