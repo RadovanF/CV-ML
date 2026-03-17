@@ -109,7 +109,6 @@ test_data  = datasets.FashionMNIST(root='./data', train=False, download=True, tr
 #
 # Pro složitější případy (např. labely v CSV) se definuje vlastní třída dědící z Dataset.
 
-
 # DataLoader rozdělí data do dávek — každá dávka (batch) má 64 obrázků
 train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 test_loader  = DataLoader(test_data,  batch_size=64, shuffle=False)
