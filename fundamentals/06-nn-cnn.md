@@ -174,11 +174,13 @@ Vizualizace  `nn.Flatten()`
 ### Ukázkový výstup
 
 ```text
-Epocha 1/5  |  Loss: 0.3521  |  Přesnost: 96.12%
-Epocha 2/5  |  Loss: 0.1523  |  Přesnost: 97.10%
-Epocha 3/5  |  Loss: 0.1091  |  Přesnost: 97.54%
-Epocha 4/5  |  Loss: 0.0843  |  Přesnost: 97.89%
-Epocha 5/5  |  Loss: 0.0671  |  Přesnost: 98.05%
+Epoch 1/5  |  Loss: 0.4974
+Epoch 2/5  |  Loss: 0.3811
+Epoch 3/5  |  Loss: 0.3419
+Epoch 4/5  |  Loss: 0.3181
+Epoch 5/5  |  Loss: 0.2992
+Váhy uloženy do model.pth
+Přesnost na testovacích datech: 86.06%
 ```
 
 
