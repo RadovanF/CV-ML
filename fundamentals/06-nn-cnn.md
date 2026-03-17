@@ -238,7 +238,7 @@ Při definici konvoluční vrstvy `nn.Conv2d` v kódu určujeme tyto technické 
 
 ## 2. Pooling — zmenšení rozměrů
 
-<img src="cnn-pooling.png" alt="Princip Max Poolingu" width="500" />
+<img src="imgs/cnn-pooling.png" alt="Princip Max Poolingu" width="500" />
 
 Po konvoluci se obvykle zařazuje **Pooling** (např. max): rozdělí feature mapu na malá okna a z každého vezme maximum.
 
