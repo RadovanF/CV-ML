@@ -34,7 +34,7 @@ Nejpoužívanější je **ReLU**: `f(x) = max(0, x)`
 - Kladné hodnoty **projdou beze změny** — neuron "svítí"
 - Záporné hodnoty se **oříznou na nulu** — neuron "mlčí"
 
-Záporné hodnoty nás prostě nezajímají: reprezentují "neuron, který na daný vstup nereaguje". ReLU je oblíbená proto, že je výpočetně velmi jednoduchá a trénování s ní v mnoha případech funguje (existují i další verze, např. GELU, LeakyReLU).
+Záporné hodnoty jsou "nulovány": reprezentují "neuron, který na daný vstup nereaguje". ReLU je oblíbená proto, že je výpočetně velmi jednoduchá a trénování s ní v mnoha případech funguje (existují i další verze, např. GELU, LeakyReLU).
 
 ---
 
