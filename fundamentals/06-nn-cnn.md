@@ -272,7 +272,7 @@ Pooling 2×2 v tomto případě zmenší rozměry na polovinu. Má tři výhody:
 
 ## 3. Celková architektura CNN
 
-<img src="imgs/cnn-arch.jpg" alt="Schéma CNN architektury" width="600" />
+<img src="imgs/cnn-arch-fmnist-01.png" alt="Schéma CNN architektury" width="600" />
 
 ```text
 Vstup (obrázek)
