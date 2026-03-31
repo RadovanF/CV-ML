@@ -85,6 +85,7 @@ pip install torch torchvision
 ```python
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
@@ -95,56 +96,44 @@ print(f"Používám zařízení: {device}")
 
 # --- 1. Načtení dat ---
 transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.ToTensor(),                   
+    transforms.Normalize((0.5,), (0.5,))     # normalizace na -1.0–1.0
 ])
 
+# dataset FashionMNIST je součástí torchvision
 train_data = datasets.FashionMNIST(root='./data', train=True,  download=True, transform=transform)
 test_data  = datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
 
+# POZNÁMKA: Pokud je potřeba načítat vlastní obrázky z adresáře,
+# kde jsou rozdělené do složek podle tříd (např. data/cats, data/dogs),
+# je možné použít datasets.ImageFolder:
+# 
+# my_train_data = datasets.ImageFolder(root='cesta/k/datum', transform=transform)
+# train_loader  = DataLoader(my_train_data, batch_size=64, shuffle=True)
+#
+# Pro složitější případy (např. labely v CSV) se definuje vlastní třída dědící z Dataset.
+
+# DataLoader rozdělí data do dávek — každá dávka (batch) má 64 obrázků
 train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 test_loader  = DataLoader(test_data,  batch_size=64, shuffle=False)
 
-# --- 2. Definice CNN ---
-class CNN(nn.Module):
+# --- 2. Definice sítě ---
+class Net(nn.Module):
     def __init__(self):
         super().__init__()
-
-        # Konvoluční část — extrakce rysů z obrázku
-        self.features = nn.Sequential(
-            # Vstup: 1 kanál (šedotón), 32 filtrů 3×3
-            # padding=1 zachová rozměr: 28×28 → 28×28
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            # MaxPool 2×2 → rozměr 14×14
-            nn.MaxPool2d(kernel_size=2),
-
-            # 32 vstupních kanálů, 64 filtrů 3×3
-            # padding=1 zachová rozměr: 14×14 → 14×14
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
-            nn.ReLU(),
-            # MaxPool 2×2 → rozměr 7×7
-            nn.MaxPool2d(kernel_size=2),
-        )
-
-        # Klasifikační část — stejná jako MLP!
-        self.classifier = nn.Sequential(
-            # Po konvoluci: 64 kanálů × 7×7 = 3136 čísel
-            nn.Flatten(),
-            nn.Linear(64 * 7 * 7, 128),
-            nn.ReLU(),
-            nn.Linear(128, 10)    # 10 výstupů = kategorie oblečení
-        )
+        self.flatten = nn.Flatten()       # rozbalí obrázek 28×28 na vektor 784 čísel
+        self.fc1 = nn.Linear(784, 128)    # vstup: 784 pixelů → 128 neuronů
+        self.fc2 = nn.Linear(128, 10)     # výstup: 10 tříd (kategorie oblečení)
 
     def forward(self, x):
-        x = self.features(x)       # → (batch, 64, 7, 7)
-        x = self.classifier(x)     # → (batch, 10)
+        x = self.flatten(x)               # (batch, 1, 28, 28) → (batch, 784)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)                   # poslední vrstva bez aktivace — CrossEntropyLoss ji obsahuje
         return x
 
-# Přesun modelu na zařízení
-model = CNN().to(device)
+model = Net().to(device)
 
-# --- 3. Loss a optimizer (stejné jako u MLP) ---
+# --- 3. Loss funkce a optimizer ---
 loss_fn   = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -158,10 +147,10 @@ for epoch in range(1, EPOCHS + 1):
     model.train()
     total_loss = 0
     for images, labels in train_loader:      # dávka 64 obrázků
-        images, labels = images.to(device), labels.to(device) # <--- Přidán přesun dat na GPU
+        images, labels = images.to(device), labels.to(device)
         predictions = model(images)          # dopředný průchod
         loss = loss_fn(predictions, labels)  # výpočet chyby
-        # aktualizace vah (3 kroky, vždy ve stejném pořadí):
+        # aktualizace vah:
         optimizer.zero_grad()                # 1) vynuluj staré gradienty
         loss.backward()                      # 2) spočítej nové gradienty (zpětné šíření)
         optimizer.step()                     # 3) posuň váhy ve směru menší chyby
@@ -170,21 +159,22 @@ for epoch in range(1, EPOCHS + 1):
     print(f"Epoch {epoch}/{EPOCHS}  |  Loss: {avg_loss:.4f}")
 
 # Uložení natrénovaných vah
-torch.save(model.state_dict(), "model_cnn.pth")
-print("Váhy uloženy do model_cnn.pth")
+torch.save(model.state_dict(), "model.pth")
+print("Váhy uloženy do model.pth")
 
 # Načtení vah (např. pro pozdější použití bez trénování)
-model.load_state_dict(torch.load("model_cnn.pth"))
+model.load_state_dict(torch.load("model.pth"))
 model.eval()
 
 # --- 5. Testování (jednorázově po dokončení trénování) ---
+model.eval()
 correct = 0
 total   = 0
 with torch.no_grad():
     for images, labels in test_loader:
-        images, labels = images.to(device), labels.to(device) # <--- Přidán přesun testovacích dat na GPU
+        images, labels = images.to(device), labels.to(device)
         predictions = model(images)
-        _, predicted = torch.max(predictions, 1)
+        _, predicted = torch.max(predictions, dim=1)  # hledá maximum přes dimenzi tříd
         correct += (predicted == labels).sum().item()
         total   += labels.size(0)
 
@@ -317,6 +307,10 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
+# Nastavení výpočetního zařízení (GPU pokud je k dispozici, jinak CPU)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Používám zařízení: {device}")
+
 # --- 1. Načtení dat ---
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -337,7 +331,7 @@ class CNN(nn.Module):
         # Konvoluční část — extrakce rysů z obrázku
         self.features = nn.Sequential(
             # Vstup: 1 kanál (šedotón), 32 filtrů 3×3
-            # padding=1 zachová rozměr: 28×28 → 28×28
+            # padding=1 zachová rozměr po aplikaci konvolučních filtrů o velikosti 3×3: 28×28 → 28×28
             nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
             nn.ReLU(),
             # MaxPool 2×2 → rozměr 14×14
@@ -365,7 +359,8 @@ class CNN(nn.Module):
         x = self.classifier(x)     # → (batch, 10)
         return x
 
-model = CNN()
+# Přesun modelu na zařízení
+model = CNN().to(device)
 
 # --- 3. Loss a optimizer (stejné jako u MLP) ---
 loss_fn   = nn.CrossEntropyLoss()
@@ -380,10 +375,11 @@ EPOCHS = 5
 for epoch in range(1, EPOCHS + 1):
     model.train()
     total_loss = 0
-    for images, labels in train_loader:      # dávka 64 obrázků
+    for images, labels in train_loader:      # dávka např. 64 obrázků
+        images, labels = images.to(device), labels.to(device) # <--- přesun dat na device
         predictions = model(images)          # dopředný průchod
         loss = loss_fn(predictions, labels)  # výpočet chyby
-        # aktualizace vah (3 kroky, vždy ve stejném pořadí):
+        # aktualizace vah:
         optimizer.zero_grad()                # 1) vynuluj staré gradienty
         loss.backward()                      # 2) spočítej nové gradienty (zpětné šíření)
         optimizer.step()                     # 3) posuň váhy ve směru menší chyby
@@ -404,6 +400,7 @@ correct = 0
 total   = 0
 with torch.no_grad():
     for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device) # <--- přesun testovacích dat na device
         predictions = model(images)
         _, predicted = torch.max(predictions, 1)
         correct += (predicted == labels).sum().item()
