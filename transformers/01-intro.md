@@ -1,4 +1,4 @@
-# Úvod do evoluce jazykových modelů + cesta k Vision Transformerům
+# Úvod k jazykovým modelům + cesta k Vision Transformerům
 
 **(PRACOVNÍ VERZE v1)**
 
