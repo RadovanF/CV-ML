@@ -151,8 +151,8 @@ Dosovitskiy et al. (Google Brain, 2020) ukázali, že standardní Transformer lz
 2. **Lineární projekce:** Každý patch je zploštěn a lineárně promítnut do dimenze Transformeru.
 3. **Poziční vnoření a token [CLS]:** K patchům se přičtou naučitelná 1D poziční vnoření a na začátek sekvence se vloží speciální token **[CLS]** pro klasifikační hlavu.
 
-### ViT vs. CNN (ResNet)
-Tradiční konvoluční sítě (CNN) vidí obraz spíše lokálně (učí se lokální vazby) díky konvolučním jádrům. ViT naproti tomu **nemá téměř žádné lokální předsudky** o 2D obrazu a prostorové uspořádání se učí zcela od nuly z velkého množství dat.
+### ViT vs. CNN (např. VGG)
+Tradiční konvoluční sítě (CNN) vidí obraz spíše lokálně (učí se lokální vazby) díky konvolučním jádrům. ViT naproti tomu **nemá téměř žádné lokální apriorní předpoklady (předsudky)** o 2D obrazu a prostorové uspořádání se učí zcela od nuly z velkého množství dat.
 
 ### Ukázka klasifikace obrazu pomocí ViT
 ```python
