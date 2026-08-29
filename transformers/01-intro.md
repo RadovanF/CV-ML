@@ -18,9 +18,9 @@ Počítačové systémy zpracovávají textová data prostřednictvím numerick�
 První generace moderních sémantických modelů (kolem let 2013–2014) pracovala se **statickou reprezentací**. Každému slovu ze slovníku byl přiřazen právě jeden pevný vektor bez ohledu na větný kontext. Slovo s více významy (např. "koruna") má v tomto schématu pouze jedinou průměrnou reprezentaci.
 
 ### 2.1 Word2Vec
-Mikolov et al. (Google, 2013) navrhli modely, kde vektory představují přímo váhy uvnitř jednoduché neuronové sítě. Tato síť má pouze jednu vnitřní (skrytou) vrstvu. Během tréninku se učí hádat okolní slova, a jakmile trénink skončí, váhy z této vrstvy se jednoduše "vytrhnou" a uloží do tabulky. Tím vzniknou pevné (statické) vektory. Model čte text jako posuvné okno a zkouší uhádnout skryté slovo podle sousedů a k nalezení výsledku používá kosinovou podobnost.
+Mikolov et al. (Google, 2013) navrhli modely, kde vektory představují přímo váhy uvnitř neuronové sítě. Tato síť má jednu vnitřní (skrytou) vrstvu. Během tréninku se učí hádat okolní slova, a jakmile trénink skončí, váhy z této vrstvy se uloží. Tím vzniknou pevné (statické) vektory. Model čte text jako posuvné okno a zkouší uhádnout skryté slovo podle sousedů a k nalezení výsledku používá kosinovou podobnost.
 
-Díky lineární struktuře vykazují výsledné vektory schopnost reprezentovat sémantické a syntaktické vztahy pomocí aditivních a subtraktivních operací (např. $\text{King} - \text{Man} + \text{Woman} \approx \text{Queen}$).
+Díky lineární struktuře vykazují výsledné vektory schopnost reprezentovat vztahy pomocí aditivních a subtraktivních operací (např. $\text{King} - \text{Man} + \text{Woman} \approx \text{Queen}$).
 
 ### 2.2 GloVe (Global Vectors)
 Pennington et al. (Stanford, 2014) vytvořili model GloVe, který zjišťuje význam slov tak, že si nejprve vytvoří obrovskou statistickou tabulku ze všech dostupných textů. V ní je přesně spočítáno, kolikrát se každé slovo objevilo v blízkosti jakéhokoliv jiného slova. Místo postupného hádání z okolních slov (jako to dělá Word2Vec) hledá logiku v poměrech těchto výskytů. Porovnává vždy dvě slova vůči třetímu. Z této globální statistické tabulky se následně pomocí matematických operací rovnou vygenerují konečné vektory slov (tzv. embedding), aniž by se musela trénovat složitá neuronová síť.
