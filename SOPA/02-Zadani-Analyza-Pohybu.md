@@ -33,9 +33,9 @@ Pro analýzu nohou slouží indexy:
 
 ## 3. Postup
 
-1. **Výpočet úhlu:** Napsat funkci pro výpočet úhlu mezi třemi body a aplikovat ji na souřadnice kyčle, kolene a kotníku.
+1. **Výpočet vzdálenosti/úhlu:** Napsat funkci pro výpočet úhlu mezi třemi body a aplikovat ji na souřadnice kyčle, kolene a kotníku (nebo vypočítat vzdálenost mezi kyčlí a kotníkem).
 2. **Počítadlo dřepů:** Využít proměnnou pro sledování fáze (`nahore` / `dole`) a přičítat opakování pouze při dokončení celého pohybu.
-3. **Vizualizace v obraze:** Vykreslit naměřený úhel ke koleni a velkým číslem zobrazit celkový počet dřepů na obrazovce.
+3. **Vizualizace v obraze:** Vykreslit naměřený úhel/vzdálenost a zobrazit celkový počet dřepů na obrazovce.
 
 ---
 
