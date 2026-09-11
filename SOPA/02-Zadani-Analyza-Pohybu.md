@@ -103,7 +103,6 @@ cv2.destroyAllWindows()
 ## 5. Ukázka výsledného řešení
 
 Ukázkové video výstupu: [vystup_02_analyza_pohybu.mp4](vystup_02_analyza_pohybu.mp4)
-
-<video src="vystup_02_analyza_pohybu.mp4" controls="controls" width="100%"></video>
+![Ukázka výstupu](vystup_02_analyza_pohybu.gif)
 
 [Testovací data ke stažení](https://mrl.cs.vsb.cz/data/vyuka/sopa/dataset_pohyb.zip)
