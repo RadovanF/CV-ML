@@ -110,7 +110,7 @@ cv2.destroyAllWindows()
 ## 5. Ukázka výsledného řešení
 
 Ukázkové video výstupu: [vystup_01_yolo_video.mp4](vystup_01_yolo_video.mp4)
-
+![Ukázka výstupu](vystup_01_yolo_video.gif)
 <video src="vystup_01_yolo_video.mp4" controls="controls" width="100%"></video>
 
 [Testovací data ke stažení](https://mrl.cs.vsb.cz/data/vyuka/sopa/dataset_automotive.zip)
