@@ -103,7 +103,7 @@ Vzorec funguje jako **přepínač** podle skutečné třídy $y$:
 <img src="imgs/bce-loss.png" width="650" />
 
 V grafu jsou vyznačeny obě situace a konkrétní hodnoty:
-* **Modrá křivka (skutečnost $y = 1$, funkce $-\ln(\hat{y})$):**
+* **Modrá křivka:** (skutečnost $y = 1$, funkce ${-\ln(\hat{y})}$)
   - **Špatný tip ($\hat{y} = 0.1$):** Ztráta je vysoká: $-\ln(0.1) \approx 2.30$ (příklad z `loss-example.py`).
   - **Dobrý tip ($\hat{y} = \sigma(2.5) \approx 0.92$):** Po aplikaci Sigmoidu ztráta klesne k nule: $-\ln(0.92) \approx 0.08$.
 * **Červená čárkovaná křivka**(skutečnost $y = 0$, funkce ${-\ln(1 - \hat{y})}$): 
