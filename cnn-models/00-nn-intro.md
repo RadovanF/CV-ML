@@ -363,3 +363,6 @@ V každé epoše se v PyTorch opakuje stejný cyklus:
 - [PyTorch dokumentace k optimalizátorům](https://pytorch.org/docs/stable/optim.html)
 - [PyTorch dokumentace ke ztrátovým funkcím](https://pytorch.org/docs/stable/nn.html#loss-functions)
 - [PyTorch tutorial](https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html)
+  
+---
+<span style="font-size: 10px; color: gray;">Při tvorbě textu byl využit model Gemini 3.8 Flash.</span>
