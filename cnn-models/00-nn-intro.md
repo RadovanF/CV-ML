@@ -197,7 +197,7 @@ Vstupní data obsahují jednotlivé příznaky (*features*, např. souřadnice b
 Schéma jednoho konkrétního neuronu:
 ```text
 x1 ── w1 ──┐
-x2 ── w2 ──┼──> x1·w1 + x2·w2 + b ──> aktivace ──> výstup
+x2 ── w2 ──┼──> x1·w1 + x2·w2 + x3·w3 + b ──> aktivace ──> výstup
 x3 ── w3 ──┘
 ```
 
