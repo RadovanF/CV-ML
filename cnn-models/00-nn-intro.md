@@ -265,7 +265,7 @@ V reálných úlohách se komponenty neprogramují ručně, ale skládají se po
 ### Typický pipeline:
 1. **Definice modelu (`nn.Sequential`):**
    - `nn.Linear(in_features, out_features)`: Lineární vrstva ($X \cdot W^T + b$).
-   - `nn.ReLU()`: Nelineární aktivační funkce ($f(x) = \max(0, x)$) umožňující síti učit se nelineární vztahy.
+   - `nn.ReLU()`: Nelineární aktivační funkce (${f(x) = \max(0, x)})$ umožňující síti učit se nelineární vztahy.
    - `nn.Sigmoid()`: Převádí výstup do intervalu $(0, 1)$ vhodného pro pravděpodobnost třídy.
 2. **Výběr loss funkce a optimizeru:** `nn.BCELoss()` a `optim.SGD()`.
 3. **Trénovací smyčka:** Forward $\rightarrow$ Loss $\rightarrow$ Backward $\rightarrow$ Step $\rightarrow$ Zero Grad.
