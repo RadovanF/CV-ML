@@ -115,9 +115,9 @@ V grafu jsou vyznačeny obě situace a konkrétní hodnoty:
 Model může interně produkovat libovolné reálné číslo (**logit** v rozsahu $-\infty$ až $+\infty$). Sigmoid z něj udělá hodnotu $0$ až $1$, která se interpretuje jako pravděpodobnost. 
 
 V PyTorch máme dvě cesty:
-1. **Model se Sigmoidem + `nn.BCELoss()`:**
+1. Model se Sigmoidem + `nn.BCELoss()`:
    $$\text{logit} \xrightarrow{\text{Sigmoid}} \text{pravděpodobnost (0 až 1)} \xrightarrow{\text{BCELoss}} \text{ztráta}$$
-2. **Model bez Sigmoidu + `nn.BCEWithLogitsLoss()` (doporučeno):**
+2. Model bez Sigmoidu + `nn.BCEWithLogitsLoss()` (doporučeno):
    $$\text{logit} \xrightarrow{\text{BCEWithLogitsLoss}} \text{ztráta}$$
    `BCEWithLogitsLoss` v sobě Sigmoid i logaritmus zahrnuje přímo v jednom matematickém kroku. Zabraňuje tím zaokrouhlovacím chybám (přetečení/podtečení čísel s plovoucí čárkou) a je numericky výrazně stabilnější.
 
