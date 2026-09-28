@@ -117,7 +117,7 @@ Model může interně produkovat libovolné reálné číslo (**logit** v rozsah
 V PyTorch máme dvě cesty:
 1. **Sigmoid + `nn.BCELoss()`**
 2. **Pouze `nn.BCEWithLogitsLoss()` (doporučeno)**:
-   `BCEWithLogitsLoss` v sobě Sigmoid i logaritmus zahrnuje přímo v jednom matematickém kroku. Zabraňuje tím zaokrouhlovacím chybám (přetečení/podtečení čísel s plovoucí čárkou) a je numericky stabilnější.
+   `BCEWithLogitsLoss` v sobě Sigmoid i logaritmus zahrnuje přímo v jednom matematickém kroku a je numericky stabilnější.
 
 ### C. Vícetřídní klasifikace: CrossEntropyLoss
 Kombinuje funkci `LogSoftmax` a `NLLLoss` (Negative Log-Likelihood).
