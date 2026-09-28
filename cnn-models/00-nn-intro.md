@@ -365,4 +365,4 @@ V každé epoše se v PyTorch opakuje stejný cyklus:
 - [PyTorch tutorial](https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html)
   
 ---
-<span style="font-size: 10px; color: gray;">Při tvorbě textu byl využit model Gemini 3.8 Flash.</span>
+<small>Při tvorbě textu byl využit model Gemini 3.8 Flash.</small>
