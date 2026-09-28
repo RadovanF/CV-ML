@@ -106,7 +106,7 @@ V grafu jsou vyznačeny obě situace a konkrétní hodnoty:
 * **Modrá křivka (skutečnost $y = 1$, funkce $-\ln(\hat{y})$):**
   - **Špatný tip ($\hat{y} = 0.1$):** Ztráta je vysoká: $-\ln(0.1) \approx 2.30$ (příklad z `loss-example.py`).
   - **Dobrý tip ($\hat{y} = \sigma(2.5) \approx 0.92$):** Po aplikaci Sigmoidu ztráta klesne k nule: $-\ln(0.92) \approx 0.08$.
-* **Červená čárkovaná křivka (skutečnost $y = 0$, funkce $-\ln(1 - \hat{y})$):**
+* **Červená čárkovaná křivka** (skutečnost $y = 0$, funkce $-\ln(1 - \hat{y})$):
   - **Dobrý tip ($\hat{y} = 0.1$):** Když je skutečnost $0$ a síť tipne $0.1$, chyba je minimální: $-\ln(1 - 0.1) \approx 0.11$.
   - **Špatný tip ($\hat{y} = 0.85$):** Když síť mylně předpoví vysokou pravděpodobnost $0.85$, chyba prudce roste: $-\ln(1 - 0.85) \approx 1.90$.
 
