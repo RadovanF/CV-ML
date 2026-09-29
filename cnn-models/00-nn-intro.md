@@ -208,7 +208,7 @@ Jeden neuron provádí vážený součet vstupů a přičítá práh (bias):
 $$o = X \cdot w + b$$
 
 * **Skalární součin:** Operace `torch.matmul(X, w)` je maticové násobení. Pro každý řádek (vzorek) matice $X$ provede skalární součin vstupních příznaků s váhami $w$. Součet je tedy schován přímo v násobení.
-* **Autograd v PyTorch:** Parametr `requires_grad=True` říká PyTorchu, aby sledoval operace s tenzorem a automaticky spočítal parciální derivace při zavolání `loss.backward()`.
+* **Autograd v PyTorch:** Parametr `requires_grad=True` říká knihovně PyTorch, aby sledoval operace s tenzorem a automaticky spočítal parciální derivace při zavolání `loss.backward()`.
 * **Krok optimalizátoru:** `optim.step()` odečte gradienty vynásobené rychlostí učení od parametrů ($w \leftarrow w - \alpha \cdot \nabla \text{Loss}$).
 
 ### Zdrojový kód: Trénování jednoho neuronu (`nn-from-scratch-pytorch.py`)
