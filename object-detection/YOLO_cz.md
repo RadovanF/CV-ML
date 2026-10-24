@@ -7,7 +7,7 @@
 
 ## 1. Hlavní myšlenka (Grid-First Approach)
 
-YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém lokalizace řeší na úrovni jednotlivých buněk. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů (v YOLOv1 je B = 2).
+YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém lokalizace řeší na úrovni jednotlivých buněk. Neprohledává obrázek po jednotlivých oblastech (jako posuvné okno – sliding window, nebo návrhy oblastí u R-CNN), ale nejdřív určí, „která buňka objekt má“ – a ta pak spočítá jeho přesnou polohu a velikost. Každá buňka této mřížky funguje jako samostatný detektor, který má za úkol predikovat B ohraničujících boxů (v YOLOv1 je B = 2).
 
 <center>
 <img src="./imgs/yolov1-00kn.png" alt="" width="1280">
@@ -40,7 +40,6 @@ Díky **hluboké konvoluční síti** (backbone, např. VGG) má **každý neuro
 > ⚠️ **POZOR**: I když buňka [0,0] (vlevo nahoře) odpovídá za levý horní roh, technicky "vidí" i kontext z jiné části obrazu.
 
 Toto je klíčové - neuron v mřížce má **receptivní pole** (receptive field), které pokrývá velkou část vstupu. Díky tomu může síť vidět celou sadu kontextu i když se "soustředí" na jednu buňku.
-
 ---
 
 ## 3. Rozdělení odpovědnosti
@@ -51,7 +50,7 @@ Aby se detektory v buňkách nehádaly ("Já to vidím!" - "Já taky!"), YOLO za
 
 Praktické důsledky:
 - Objekt přesahující 4 buňky? → Učí se ho **jen ta jedna se středem**
-- Ostatní buňky jsou **ignorovány**, i když objekt vidí
+- Ostatní buňky se tento objekt **neučí lokalizovat ani klasifikovat** – i když ho vidí, učí se pro něj predikovat Confidence = 0
 - To **nutí síť** naučit se přesně lokalizovat střed objektu
 
 Toto omezení je v YOLOv1 poměrně svazující - v pozdějších verzích se to autoři snaží postupně řešit (anchor boxes ve v2, multi-scale predictions ve v3).
@@ -140,7 +139,7 @@ class YOLOv1Simple(nn.Module):
         # 1. BACKBONE (VGG16 Features)
         # Vstup: [Batch, 3, 224, 224]
         # Výstup: [Batch, 512, 7, 7]
-        vgg = models.vgg16(pretrained=True)
+        vgg = models.vgg16(weights=models.VGG16_Weights.DEFAULT)
         self.features = vgg.features
         
         # Zmrazení vah backbonu (volitelné - transfer learning)
@@ -256,7 +255,7 @@ Input: [32, 3, 224, 224]     (32 obrázků, 3 RGB kanály, 224×224 pixelů)
        ↓
 VGG16 Features
        ↓
-Output: [32, 512, 7, 7]      (512 feature map, 7×7 grid)
+Output: [32, 512, 7, 7]      (512 příznakových map 7×7 – zatím nejde o YOLO mřížku)
        ↓
 Flatten: [32, 25088]
        ↓
@@ -271,18 +270,22 @@ Reshape: [32, 7, 7, 30]      (každá buňka má 30 hodnot)
 Return
 ```
 
+> ⚠️ Mřížka 7×7 na výstupu vzniká až operací `reshape`. Rozměr 7×7 před FC vrstvou (u originálního YOLOv1 7×7×1024, zde 512×7×7) s ní sice záměrně odpovídá, ale po `Flatten` a FC vrstvách se prostorová informace „promíchá“. To, že výstup [i, j] patří buňce [i, j] v obrázku, se síť naučí díky tomu, jak jsou sestavené cílové hodnoty (targety) v loss funkci.
+
 ### Příklad použití
 
 ```python
 if __name__ == "__main__":
     model = YOLOv1Simple(n_classes=20, B=2)
+    model.eval()  # režim inference (vypne Dropout)
     dummy = torch.randn(1, 3, 224, 224)
-    out = model(dummy)
+    with torch.no_grad():  # gradienty nepotřebujeme
+        out = model(dummy)
     
     print("Výstup:", out.shape)  # torch.Size([1, 7, 7, 30])
     
     # Extrakce dat z buňky [3, 3]
-    cell = out[0, 3, 3]  # Batche 0, řádek 3, sloupec 3
+    cell = out[0, 3, 3]  # Batch 0, řádek 3, sloupec 3
     
     print("Box1:", cell[0:5].detach().numpy())    # [x, y, w, h, conf]
     print("Box2:", cell[5:10].detach().numpy())   # [x, y, w, h, conf]
@@ -373,14 +376,15 @@ loss_wh = λ_coord × ((√w_pred - √w_target)² + (√h_pred - √h_target)²
 Představme si dva scénáře:
 1. **Velký objekt**: Skutečná velikost 0.8×0.8, predikce 0.7×0.7
    - Bez odmocniny: (0.7 - 0.8)² = 0.01
-   - S odmocninou: (√0.7 - √0.8)² ≈ 0.01 (podobně)
+   - S odmocninou: (√0.7 - √0.8)² ≈ (0.837 - 0.894)² ≈ 0.0033
 
 2. **Malý objekt**: Skutečná velikost 0.2×0.2, predikce 0.1×0.1
    - Bez odmocniny: (0.1 - 0.2)² = 0.01
-   - S odmocninou: (√0.1 - √0.2)² ≈ 0.035 (VĚTŠÍ!)
+   - S odmocninou: (√0.1 - √0.2)² ≈ (0.316 - 0.447)² ≈ 0.017 (zhruba 5× VÍCE než u velkého objektu!)
 
 **Důsledek:**
-- Stejná absolutní chyba u malých objektů se penalizuje **více** než u velkých
+- Bez odmocniny mají oba případy stejnou chybu (0.01), přestože u malého objektu je chyba 0.1 relativně mnohem závažnější (50 % jeho velikosti vs. 12.5 % u velkého)
+- S odmocninou se stejná absolutní chyba u malých objektů penalizuje **více** než u velkých (0.017 vs. 0.0033)
 - Požaduje se přesnost i na malých objektech
 
 ### C) Chyba Confidence PRO OBJEKTY
@@ -408,7 +412,7 @@ Příklady:
 
 **Proč?**
 - Model se učí, jaká predikce je dobrá (IoU) vs špatná
-- V inferenci: confidence > 0.5 znamená "věřím tomu boxu"
+- V inferenci: confidence > 0.5 znamená "věřím tomu boxu" (práh je volitelný, 0.5 je jen příklad)
 
 ### D) Chyba Confidence PRO POZADÍ
 
@@ -417,7 +421,8 @@ loss_noobj = λ_noobj × (conf_pred - 0)²
 ```
 
 **Vysvětlení:**
-- Počítá se pro **boxy bez objektu** v buňkách
+- Počítá se pro **boxy bez objektu** (tj. boxy, které nejsou zodpovědné za žádný objekt)
+- Zodpovědný box, tedy „box s objektem“, se tato chyba netýká - jeho confidence se učí přes část **C) loss_obj** s cílem IoU
 - Cílová hodnota = 0 (žádný objekt)
 - Má **nižší váhu** (λ_noobj = 0.5), protože:
   - Většina buněk neobsahuje objekt (pozadí)
@@ -459,10 +464,10 @@ class YOLOv1Loss(nn.Module):
     
     def forward(self, predictions, target):
         """
-        Total Loss = λ_coord × loss_xy 
-                   + λ_coord × loss_wh 
+        Total Loss = loss_xy 
+                   + loss_wh 
                    + loss_obj
-                   + λ_noobj × loss_noobj
+                   + loss_noobj
                    + loss_class
         """
 ```
@@ -475,24 +480,32 @@ class YOLOv1Loss(nn.Module):
 ```python
 def yolo_loss(predictions, targets):
     """
-    predictions: [Batch, 7, 7, 30]  # (x, y, w, h, conf)×2 + 20 tříd
-    targets: [Batch, 7, 7, 30]      # ground truth
+    predictions: [Batch, 7, 7, 30] – výstup sítě
+        Každá buňka: 2 boxy × (x, y, w, h, conf) + 20 pravděpodobností tříd = 30 hodnot
+
+    targets: [Batch, 7, 7, 30] – skutečné (anotované) hodnoty
+        Každá buňka obsahuje nejvýše 1 objekt:
+        (x, y, w, h) jeho boxu, příznak "je zde objekt" (1/0) a třídu (20 hodnot, one-hot)
+        Zbylá místa do 30 hodnot zůstávají nevyužitá – tvar je stejný jen pro pohodlí
+
+    IoU_score není součástí targets – počítá se až během tréninku
+    mezi predikovaným boxem a skutečným boxem (a podle něj se také vybírá zodpovědný box)
     """
     
-    # --- SOUŘADNICE XY --------------------------------------------------
+    # --- SOUŘADNICE XY (jen zodpovědné boxy) ----------------------------
     loss_xy = lambda_coord * SSE(x_pred - x_target, y_pred - y_target)
     
-    # --- VELIKOST WH (s odmocninou!) --------------------------------
+    # --- VELIKOST WH (jen zodpovědné boxy) ------------------------------
     loss_wh = lambda_coord * SSE(sqrt(w_pred) - sqrt(w_target), 
                                   sqrt(h_pred) - sqrt(h_target))
     
-    # --- OBJECT LOSS ---------
+    # --- OBJECT LOSS (jen zodpovědné boxy) ---------
     loss_obj = SSE(conf_pred - IoU_score)
     
-    # --- NO OBJECT LOSS  ----
+    # --- NO OBJECT LOSS (jen boxy bez objektu = nezodpovědné) ----
     loss_noobj = lambda_noobj * SSE(conf_pred - 0)
     
-    # --- CLASS LOSS --------------------------------
+    # --- CLASS LOSS (jen buňky, ve kterých je objekt) ------------
     loss_class = SSE(class_probs_pred - class_probs_target)
     
     # --- TOTAL LOSS -------------------------------------------
@@ -500,6 +513,39 @@ def yolo_loss(predictions, targets):
     
     return total_loss
 ```
+
+---
+
+# Inference – od výstupu sítě k výsledným boxům
+
+Výstup sítě `[7, 7, 30]` obsahuje celkem 7 × 7 × 2 = **98 boxů**. Výsledné detekce z nich dostaneme ve čtyřech krocích:
+
+**1. Dekódování souřadnic**
+1. Převést x, y z relativních souřadnic buňky na relativní souřadnice obrázku (`x_obr = (x + sloupec) / 7`, `y_obr = (y + řádek) / 7`). U w, h není potřeba nic dělat, ty už relativní k obrázku jsou.
+2. Pro pixely vynásobit všechny čtyři hodnoty rozměry obrázku (x a w šířkou, y a h výškou).
+
+**2. Skóre pro každou třídu**
+- Každý box má svou **confidence**: jestli v něm je nějaký objekt a jak dobře sedí (o třídě neříká nic).
+- Buňka má **pravděpodobnosti tříd**: *pokud* tu objekt je, o jakou třídu jde (sdílené oběma boxy).
+- Jejich vynásobením dostaneme pro každý box a každou třídu jedno **skóre**:
+  `skóre = confidence boxu × pravděpodobnost třídy`
+
+*Příklad:* Buňka má pravděpodobnosti pes = 0.7, kočka = 0.2, …
+- Box 1 má confidence 0.8 → skóre pes = 0.8 × 0.7 = **0.56**, kočka = 0.8 × 0.2 = 0.16
+- Box 2 má confidence 0.1 → skóre pes = 0.1 × 0.7 = **0.07** → v dalším kroku vypadne
+
+Vysoké skóre tedy znamená, že box dobře sedí na objekt **a zároveň** si je síť jistá jeho třídou.
+
+**3. Prahování**
+- Boxy se skóre pod prahem (např. 0.2) zahodíme.
+
+**4. NMS (Non-Maximum Suppression)**
+- Jeden objekt často zachytí více boxů (např. ze sousedních buněk).
+- Pro každou třídu zvlášť:
+  1. Vezmeme box s nejvyšším skóre → ponecháme ho.
+  2. Odstraníme všechny ostatní boxy, které ho překrývají s IoU > 0.5.
+  3. Opakujeme se zbývajícími boxy.
+- Podle autorů NMS přidává 2–3 % mAP.
 
 ---
 
@@ -530,7 +576,7 @@ def yolo_loss(predictions, targets):
 
 | Vlastnost | Popis |
 |-----------|--------|
-| ✅ **Rychlost** | Jedna forward pass pro celý obrázek - velmi rychlé na CPU i GPU |
+| ✅ **Rychlost** | Jeden forward pass pro celý obrázek – na GPU v reálném čase, výrazně rychlejší než R-CNN přístupy |
 | ✅ **Přehledná architektura** | Relativně jednoduchý design - snadné porozumění |
 | ❌ **Přesnost lokalizace** | Regrese souřadnic přímo je nestabilní - těžko se učí přesné umístění |
 | ❌ **Malé objekty** | Mřížka 7×7 je příliš hrubá - malé objekty se ztrácejí |
@@ -566,16 +612,17 @@ Toto byla zásadní **změna** ve verzi 2.
 **Řešení v YOLOv2:**
 - Inspirace: **Faster R-CNN**
 - Pro každou buňku v mřížce se **předdefinuje N "kotev"** (anchors)
-- Kotva = předdefinovaný tvar/poměr stran (**aspect ratio**)
-- Síť nyní **NEPREDIKOVÁVÁ souřadnice přímo**, ale **RELATIVNÍ ÚPRAVY** k těmto kotvám:
-  - Δx, Δy, Δw, Δh (adjustments)
+- Kotva = předdefinovaný obdélník daný **velikostí** a **poměrem stran** (aspect ratio)
+- Síť nyní **NEPREDIKUJE souřadnice přímo**, ale **RELATIVNÍ ÚPRAVY** k těmto kotvám:
+  - Δx, Δy – posun středu relativně vůči **buňce** (ne vůči kotvě, omezeno sigmoidou na 0–1, aby střed nemohl „utéct“ z buňky)
+  - Δw, Δh – zvětšení/zmenšení šířky a výšky **kotvy**
   - Confidence
-  - Class probabilities
-- **Výhoda**: Síť se učí hledat, co **věděla, že existuje** = **stabilnější trénink**
+  - Class probabilities (nově **pro každou kotvu zvlášť** – v YOLOv1 byly společné pro celou buňku, proto mohla buňka detekovat jen jeden objekt)
+- **Výhoda**: Síť nezačíná od nuly – vychází z kotev (typických tvarů a velikostí objektů v datasetu) a učí se jen malé korekce = **stabilnější trénink**
 
 **Jak to funguje v praxi:**
 1. Síť vidí obrázek
-2. Pro každou kotvu v každé buňce predikuje: "jak moc se tato kotva má posunout/zvětšit/zmenšit"
+2. Pro každou kotvu v každé buňce predikuje: "kde v buňce je střed a jak moc se tato kotva má zvětšit/zmenšit"
 3. Malé úpravy jsou snadnější se učit než regrese z nuly
 
 ### C) K-Means Clustering
@@ -608,10 +655,7 @@ Toto byla zásadní **změna** ve verzi 2.
   - Model se lépe generalizuje
   - Bez toho by model pracoval dobře jen na jednom rozlišení
 
-**Prakticky:** Během jedné epochy:
-- Prvních N iterací na 320×320 - malé objekty, širší kontext
-- Dalších N iterací na 352×352 - středně-velké objekty
-- Atd. až po 608×608 - velké objekty, detaily
+**Prakticky:** Síť každých 10 dávek (batches) náhodně vybere nové rozlišení z definované množiny, aby se naučila spolehlivě detekovat objekty v různých měřítkách bez ohledu na velikost vstupního obrázku.
 
 Toto je forma **data augmentation** - ale důležitá pro detekci.
 
@@ -622,7 +666,7 @@ Toto je forma **data augmentation** - ale důležitá pro detekci.
 - Výstupní mřížka: **13×13 buněk** (při 416×416 vstupu)
 - Menší než YOLOv1 (24 vrstev), ale s chytřejší architekturou
 
-**Poznámka:** YOLOv2 se také nazývá **"YOLO9000"** - pojmenování pochází z tvarů počtu výstupů (9000 objektů v širokém datasetu, který se použil pro trénink).
+**POZNÁMKA:** V publikaci "YOLO9000: Better, Faster, Stronger" autoři variantu YOLOv2 trénovali společně na COCO (detekce) a ImageNet (klasifikace) -> model YOLO9000 umí detekovat přes 9000 kategorií objektů.
 
 ---
 
@@ -639,7 +683,7 @@ Toto je forma **data augmentation** - ale důležitá pro detekci.
 | Verze | Páteř | Vrstvy | Klíčová Inovace |
 |-------|-------|--------|-----------------|
 | YOLOv1 | Vlastní | ~24 | Jednoduchý design |
-| YOLOv2 | Darknet-19 | ~24 | Batch Norm, anchor boxes |
+| YOLOv2 | Darknet-19 | 19 (+5 pool) | Batch Norm, anchor boxes |
 | YOLOv3 | Darknet-53 | 53 | **Residual Blocks** |
 
 **Inovace: Residual Blocks (Zbytková Spojení)**
@@ -658,13 +702,10 @@ Toto je forma **data augmentation** - ale důležitá pro detekci.
 Input
   ↓
   └─────┐
-        ├─ Conv 1×1 (snižuje kanály)
-        ├─ Conv 3×3 (konvoluce)
-        └─ Conv 1×1 (zvyšuje kanály)
+        ├─ Conv 1×1 (snižuje kanály na polovinu)
+        └─ Conv 3×3 (vrací počet kanálů zpět)
               ↓
            Output + Input  ← Residual connection!
-              ↓
-            ReLU
               ↓
             Output
 ```
@@ -685,13 +726,13 @@ Toto je **klíčová inovace** pro detekci malých objektů.
 |---------|--------|------------------|-------------|
 | **Scale 1** | 13×13 | VELKÉ objekty | Hluboké feature mapy |
 | **Scale 2** | 26×26 | STŘEDNÍ objekty | Střední feature mapy |
-| **Scale 3** | 52×52 | MALÉ objekty | Plytké feature mapy |
+| **Scale 3** | 52×52 | MALÉ objekty | Mělké feature mapy |
 
-1. **Detekce velkých objektů** - sítě vidí širší kontext, ale méně detailů
+1. **Detekce velkých objektů** - síť vidí širší kontext, ale méně detailů
 
 2. **Detekce středních objektů** - kompromis
 
-3. **Detekce malých objektů** - sítě vidí více detailů
+3. **Detekce malých objektů** - síť vidí více detailů
 
 
 ### C) 9 Anchor Boxes (3 na každé měřítko)
@@ -704,13 +745,13 @@ Toto je **klíčová inovace** pro detekci malých objektů.
 | YOLOv3 | 3 × 3 = 9 | Každé měřítko má **vlastní optimalizované kotvy** |
 
 **Idea:**
-- Velké objekty potřebují kotvy jako: square, wide, tall
+- Velké objekty potřebují kotvy jako: čtvercové, široké, vysoké
   - Příklady: 1:1, 2:1, 1:2 poměry
 - Malé objekty potřebují menší kotvy:
   - Příklady: 1:1, 2:1, 1:2 poměry, ale menší absolutně
-  - K-means se aplikuje znovu na každou skupinu
+- Kotvy opět z k-means (jako ve v2, jen k = 9)
 
-**Prakticky:** Pokud máme dataset s mnoha čtvercovými boxy:
+**Prakticky:**
 - YOLOv2 by měl jednu sadu kotev (např. 1:1, 2:1, 1:2, atd.)
 - YOLOv3 by měl:
   - Pro 13×13: kotvy optimalizované pro velké objekty
@@ -724,9 +765,9 @@ Tímto se model stává **mnohem efektivnější** - každé měřítko má svou
 ## Technologické inspirace v rámci v1-v3
 
 ### YOLOv2 model:
-- **Batch Normalization**: Ioffe & Szegedy, 2015 - revoluci v hlubokém učení
+- **Batch Normalization**: Ioffe & Szegedy, 2015 - revoluce v hlubokém učení
 - **Anchor Boxes**: Faster R-CNN (Ren et al., 2015) - zásadní inovace
-- **Multi-scale Training**: SSD (Liu et al., 2016) - odolnost vůči velikostem objektů
+- **Predikce na více měřítkách**: Myšlenku detekovat objekty z více příznakových map různého rozlišení využilo již SSD (Liu et al., 2016); YOLOv2 ji použilo částečně a YOLOv3 naplno.
 
 ### YOLOv3 model:
 - **Residual Networks**: ResNet (He et al., 2015) - umožnilo velmi hluboké sítě
@@ -770,9 +811,10 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 
 ## YOLOv5 (2020, Ultralytics)
 
-### Hlavní Přínosy - Usability Revolution
+### Hlavní přínosy – důraz na snadné použití
 
-- **Usability**: První **nativní PyTorch verze** (snadné použití)
+- **Použitelnost**: První verze vyvinutá přímo v **PyTorch** (snadné použití)
+  - Předchozí verze vznikly v C frameworku Darknet, v PyTorch existovaly jen jako přepisy – mj. PyTorch přepis YOLOv3 od Ultralytics, na který YOLOv5 přímo navázalo
   - Export do mobilních zařízení
   - Dobrá dokumentace
 
@@ -781,15 +823,15 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
   - V YOLOv5 dotaženo dál pomocí **Genetického algoritmu (Evolution)**
   - Algoritmus evolucí optimalizuje kotvy na dataset
 
-- **C3 Modul**: Efektivní blok s hranatou architekturou
-  - Rozdělí data na **dvě cesty**:
-    - Jedna cesta: Sérií 1×1 a 3×3 konvolucí (hlavní stream)
-    - Druhá cesta: Přímá "zkratka" (residual connection)
-  - Nakonec se obě cesty **spojí dohromady** (konkatenace)
-  - Efektivnější, než kdyby všechny vrstvy byly sériově
+- **C3 Modul**: Efektivní blok s rozvětvenou architekturou
+  - Tok dat je na vstupu rozdělen do dvou paralelních větví:
+    - **Hlavní větev:** Data projdou 1×1 konvolucí a následně sérií Bottleneck bloků (1×1 a 3×3 konvoluce s reziduálním spojením).
+    - **Vedlejší větev:** Data projdou samostatnou 1×1 konvolucí pro úpravu kanálů.
+  - Na konci se výstupy obou větví spojí pomocí **konkatenace** (nikoliv sčítáním) a projdou závěrečnou 1×1 konvolucí.
+  - **Přínos:** Spojení příznaků z hluboké a mělké větve zachovává bohatší tok gradientů a rozdělení na větve snižuje výpočetní zátěž.
 
 > 💡 **Moderní verze** (YOLOv8, v10, v11) už kotvy (Anchors) **nepoužívají vůbec** → **Anchor-Free** přístup.
-> Toto je důležitý posun - bez kotev se síť musí naučit "od nuly", ale je to obecnější.
+> Toto je důležitý posun – místo předdefinovaných kotev slouží jako výchozí bod jen střed každé buňky mřížky. Odpadá tak ladění kotev pro konkrétní dataset. Zároveň se snižuje počet predikovaných boxů (jeden na každé místo mřížky místo jednoho na každou kotvu), což zrychluje zpracování výstupu.
 
 ## YOLOv8 (2023, Ultralytics)
 
@@ -808,16 +850,18 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
 
 - **Anchor-Free**: Stává se novým standardem
   - Model už nepoužívá předdefinované kotvy
-  - Místo toho predikuje přímé souřadnice ("podobně" jako YOLOv1)
+  - Místo toho pro každý bod mřížky predikuje vzdálenosti ke čtyřem stranám boxu (vlevo, nahoře, vpravo, dole) – podobně jako YOLOv1 tedy bez kotev, ale box se popisuje jinak než pomocí (x, y, w, h)
   - Ale s moderní architekturou a technikami
 
 ## YOLOv11 (2024/25, Ultralytics)
 
 ### Nejnovější vývoj
 
-- **C3k2 & C2PSA**: Vylepšené bloky s **mechanismem pozornosti (Attention)**
+- **C3k2 & C2PSA**: Vylepšené bloky + **mechanismus pozornosti (Attention)**
+  - C3k2 – efektivnější nástupce C2f z YOLOv8 (uvnitř může využívat menší C3k bloky)
   - Attention umožňuje modelu "soustředit se" na důležité části
-  - C2PSA (Channel Spatial Attention) - hybrid přístupu
+  - C2PSA – PSA (Partial Self-Attention) převzato z YOLOv10: self-attention se z důvodu efektivity aplikuje jen na část kanálů
+  - V praxi tento modul slouží k tomu, aby se model dokázal lépe a přesněji soustředit na důležité oblasti v obraze (například na malé nebo částečně zakryté objekty) a aby nedůležité pozadí mělo na výsledek menší vliv.
 ---
 
 ## Zdroje / Reference
@@ -832,11 +876,10 @@ Redmon, Joseph, et al. "You Only Look Once: Unified, Real-Time Object Detection.
 
 Wang, Chien-Yao, et al. "YOLOv7: Trainable State-of-the-Art Object Detector." *arXiv*, 2022, https://arxiv.org/abs/2207.02696.
 
-Zheng, Chengpeng, et al. "YOLOv6: A Single-Stage Object Detector." *arXiv*, 2023, https://arxiv.org/abs/2301.05586.
+Li, Chuyi, et al. "YOLOv6 v3.0: A Full-Scale Reloading." *arXiv*, 2023, https://arxiv.org/abs/2301.05586.
 
 Terven, Juan, and Diana Cordova-Esparza. "A Comprehensive Review of YOLO Architectures in Computer Vision: From YOLOv1 to YOLOv8 and YOLO-NAS." *Machine Learning and Knowledge Extraction*, vol. 5, no. 4, 2023, pp. 1680-1716, https://arxiv.org/abs/2304.00501.
 
 Shenoda, Michael. "Real-time Object Detection: YOLOv1 Re-Implementation in PyTorch." *arXiv*, 2023, https://arxiv.org/abs/2305.17786.
 
 **Poznámka:** např. YOLOv5 nebo YOLOv11 jsou dostupné jako repozitáře na GitHub Ultralytics.
-
