@@ -72,12 +72,8 @@ Ostatních 48 buněk do této části nepřispívá vůbec.
 
 ## Proč je u části D váha λ_noobj = 0.5
 
-Většina buněk žádný objekt neobsahuje. V obrázku s jedním objektem je 7 × 7 × 2 = 98 boxů – zodpovědný je jen 1, pro zbylých 97 se počítá chyba confidence s cílem 0 (část D). Bez snížení váhy by tyto chyby převážily a síť by se naučila hlavně „všude je confidence 0“. Autoři to popisují takto:
-
-> *„In every image many grid cells do not contain any object. This pushes the ‚confidence‘ scores of those cells towards zero, often overpowering the gradient from cells that do contain objects. This can lead to model instability, causing training to diverge early on.“*
+Většina buněk žádný objekt neobsahuje. V obrázku s jedním objektem je 7 × 7 × 2 = 98 boxů – zodpovědný je jen 1, pro zbylých 97 se počítá chyba confidence s cílem 0 (část D). Bez snížení váhy by tyto chyby převážily a síť by se naučila hlavně „všude je confidence 0“.
 
 Proto spolupracují dvě váhy:
 - **λ_noobj = 0.5** – sníží vliv boxů bez objektu na polovinu,
 - **λ_coord = 5** – naopak zvýší vliv lokalizace (x, y, w, h) u zodpovědných boxů.
-
-Snížení na 0.5 nerovnováhu úplně neodstraní (97 × 0.5 je pořád výrazně víc než 1), jen ji zmírní natolik, aby byl trénink stabilní.
