@@ -33,11 +33,11 @@ Indikátor 𝟙ᵢⱼᵒᵇʲ je 1 jen tehdy, když buňka *i* obsahuje objekt a
 
 ## Příklad
 
-Buňka [3,3] obsahuje střed zájmového objektu z trénovací množiny (třída *pes*).
+Buňka [3,3] obsahuje střed zájmového objektu z trénovací množiny (třída *automobil*).
 - Box 1 má IoU s GT 0.6 a box 2 IoU 0.2.
 - Box 1 je zodpovědný, proto se pro něj počítá chyba x, y, w, h a chyba confidence (cíl = IoU = 0.6).
 - Pro box 2 se počítá jen chyba confidence (cíl = 0, část D).
-- Třída „pes“ se trénuje jednou pro celou buňku.
+- Třída „automobil“ se trénuje jednou pro celou buňku.
 
 <center>
 <img src="./imgs/popis_Ztratove_chyby_yolov1.svg" alt="Které části ztrátové funkce YOLOv1 se počítají pro který box" width="1020">
