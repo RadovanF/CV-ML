@@ -15,7 +15,7 @@ YOLO se na obrázek dívá jako na **šachovnici** (mřížka buněk) a problém
 
 ### Princip mřížky
 
-Vstupní obrázek se **virtuálně rozdělí** na mřížku SxS (např. 7×7). Toto rozdělení **není fyzické rozstříhání** obrázku, ale **logické rozdělení odpovědnosti**. 
+Vstupní obrázek se **rozdělí** na mřížku SxS (např. 7×7). Buňky se ale **nezpracovávají každá zvlášť** – celý obrázek projde sítí **jen jednou**.
 
 Celá síť je trénována tak, aby pro každou z těchto **49 buněk** vyprodukovala předpověď. Je to jako **49 malých detektorů běžících najednou**.
 
@@ -103,7 +103,7 @@ To znamená, že síť se sama učí rozpoznat rozdíl mezi "zde je objekt" (hig
 ### Detailnější vysvětlení confidence
 
 - V tréninku se učí jako IoU (Intersection over Union) mezi předpovídaným boxem a ground truth boxem
-- V inferenci se používá k filtrování slabých detekcí
+- V inferenci se spolu s pravděpodobností třídy použije k výpočtu skóre, podle kterého se filtrují slabé detekce (viz sekce Inference)
 - Hodnota 0.8 znamená: jak moc síť věří, že v tomhle boxu je nějaký objekt a že ten box dává smysl
 - Formálně se confidence učí regresí na hodnotu IoU (u buněk s objektem) nebo 0 (u pozadí); intuitivně ji můžeme číst jako kombinaci jistoty, že tu objekt je, a kvality překryvu.
 ---
@@ -324,7 +324,7 @@ Ztrátová funkce YOLOv1 se skládá z částí, které měří různé typy chy
 ### 2. Chyba confidence
 - Měří, jak dobře model **odhaduje kvalitu** své predikce
 - Během tréninku se model učí predikovat hodnotu, která odpovídá **překryvu (IoU)** s reálným objektem
-- Při testování slouží confidence k **filtrování detekcí** a výběru nejlepších rámečků pomocí NMS (Non-Maximum Suppression)
+- Při testování se confidence spolu s pravděpodobností třídy použije k výpočtu skóre, podle kterého se **filtrují detekce** a vybírají nejlepší rámečky pomocí NMS (Non-Maximum Suppression, viz sekce Inference)
 - Confidence je klíčové pro praxi - bez toho nevíme, kterým boxům věřit
 
 ### 3. Chyba klasifikace
@@ -405,14 +405,14 @@ IoU (Intersection over Union):
 IoU = Area(Predicted ∩ Ground Truth) / Area(Predicted ∪ Ground Truth)
 ```
 
-Příklady:
-- Dokonalá predikce: IoU = 1.0 → target confidence = 1.0
-- Částečné překrytí (50%): IoU = 0.5 → target confidence = 0.5
-- Chybná predikce (bez překrytí): IoU = 0 → target confidence = 0
+Příklad (zodpovědný box):
+- Box má s GT boxem IoU = 0.6 → cíl confidence = 0.6
+- Síť vrátila confidence 0.9 → chyba = (0.9 − 0.6)² = 0.09 (síť přeceňuje, jak dobře box sedí)
+- Kdyby síť vrátila confidence 0.6, chyba confidence by byla 0 – síť správně odhadla, jak dobře box sedí. Samotný box se zlepšuje přes chyby A a B.
 
 **Proč?**
 - Model se učí, jaká predikce je dobrá (IoU) vs špatná
-- V inferenci: confidence > 0.5 znamená "věřím tomu boxu" (práh je volitelný, 0.5 je jen příklad)
+- V inferenci: box s dostatečně vysokým skóre (confidence × pravděpodobnost třídy) považujeme za detekci – "věřím tomu boxu" (práh je volitelný, viz sekce Inference)
 
 ### D) Chyba Confidence PRO POZADÍ
 
@@ -521,8 +521,8 @@ def yolo_loss(predictions, targets):
 Výstup sítě `[7, 7, 30]` obsahuje celkem 7 × 7 × 2 = **98 boxů**. Výsledné detekce z nich dostaneme ve čtyřech krocích:
 
 **1. Dekódování souřadnic**
-1. Převést x, y z relativních souřadnic buňky na relativní souřadnice obrázku (`x_obr = (x + sloupec) / 7`, `y_obr = (y + řádek) / 7`). U w, h není potřeba nic dělat, ty už relativní k obrázku jsou.
-2. Pro pixely vynásobit všechny čtyři hodnoty rozměry obrázku (x a w šířkou, y a h výškou).
+1. Převést x, y z relativních souřadnic buňky na relativní souřadnice obrázku. U w, h není potřeba nic dělat, ty už relativní k obrázku jsou.
+2. Pro převod na obrazové pixely je nutné vynásobit všechny čtyři hodnoty rozměry obrázku (x a w šířkou, y a h výškou).
 
 **2. Skóre pro každou třídu**
 - Každý box má svou **confidence**: jestli v něm je nějaký objekt a jak dobře sedí (o třídě neříká nic).
@@ -538,6 +538,7 @@ Vysoké skóre tedy znamená, že box dobře sedí na objekt **a zároveň** si 
 
 **3. Prahování**
 - Boxy se skóre pod prahem (např. 0.2) zahodíme.
+- V praxi se tento práh nastavuje jako parametr `conf` detektoru (např. v Ultralytics) a filtruje výsledné **skóre detekce**. Ve YOLOv1 je to `confidence × pravděpodobnost třídy`. Podobně parametr `iou` nastavuje práh pro NMS.
 
 **4. NMS (Non-Maximum Suppression)**
 - Jeden objekt často zachytí více boxů (např. ze sousedních buněk).
