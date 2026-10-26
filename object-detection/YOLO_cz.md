@@ -863,6 +863,35 @@ Ačkoli se v YOLOv4 neděly tak drastické architektonické změny jako v YOLOv2
   - Attention umožňuje modelu "soustředit se" na důležité části
   - C2PSA – PSA (Partial Self-Attention) převzato z YOLOv10: self-attention se z důvodu efektivity aplikuje jen na část kanálů
   - V praxi tento modul slouží k tomu, aby se model dokázal lépe a přesněji soustředit na důležité oblasti v obraze (například na malé nebo částečně zakryté objekty) a aby nedůležité pozadí mělo na výsledek menší vliv.
+
+## YOLO26 (2026, Ultralytics)
+
+### Hlavní novinky
+
+- **Bez NMS**: síť vrátí pro každý objekt rovnou jeden výsledný box, takže odpadá krok NMS (odstraňování překrývajících se boxů)
+  - Při trénování má síť dvě výstupní větve: jedna dává více boxů na objekt (snáz se z ní učí), druhá jen jeden box na objekt. Při inferenci se používá jen ta druhá.
+  - Podobně (jeden box na objekt, bez NMS) funguje i transformerový detektor DETR
+- **Jednodušší predikce boxu**: od YOLOv8 se každá strana boxu predikovala složitějším způsobem, YOLO26 se vrací k přímé predikci 4 čísel → menší a rychlejší model, který jde snáz spustit i na mobilech a jiných slabších zařízeních
+- **Trénování**:
+  - Na začátku se síť učí hlavně z větve s více boxy na objekt, postupně se důraz přesouvá na větev s jedním boxem, která se pak používá při inferenci
+  - Lepší učení malých objektů – dřív se mohlo stát, že za velmi malý objekt nebyla zodpovědná žádná predikce, a síť se ho tak vůbec neučila
+  - Nový optimalizátor převzatý z trénování velkých jazykových modelů – síť se naučí rychleji
+- **Zaměření na rychlost**: výrazně rychlejší inference na CPU
+- Páteř a krk vychází z YOLOv11 (bloky C3k2, C2PSA, SPPF), predikce probíhá ve třech měřítkách
+  - C3k2 – data se rozdělí do dvou větví, jen jedna prochází konvolucemi, na konci se spojí
+  - C2PSA – stejný princip, ale v jedné větvi je mechanismus pozornosti
+  - SPPF – několik poolingů za sebou, jejichž výstupy se spojí (zachytí okolí různé velikosti)
+
+<center>
+<img src="./imgs/yolo26s1.png" alt="Architektura YOLO26" width="900">
+</center>
+
+<center>
+<img src="./imgs/yolo26s2.png" alt="Stavební bloky YOLO26" width="900">
+</center>
+
+*Zdroj: Jocher, G. et al. „Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models.“ arXiv, 2026, Figure S1 a S2, https://arxiv.org/abs/2606.03748.*
+
 ---
 
 ## Zdroje / Reference
@@ -882,5 +911,7 @@ Li, Chuyi, et al. "YOLOv6 v3.0: A Full-Scale Reloading." *arXiv*, 2023, https://
 Terven, Juan, and Diana Cordova-Esparza. "A Comprehensive Review of YOLO Architectures in Computer Vision: From YOLOv1 to YOLOv8 and YOLO-NAS." *Machine Learning and Knowledge Extraction*, vol. 5, no. 4, 2023, pp. 1680-1716, https://arxiv.org/abs/2304.00501.
 
 Shenoda, Michael. "Real-time Object Detection: YOLOv1 Re-Implementation in PyTorch." *arXiv*, 2023, https://arxiv.org/abs/2305.17786.
+
+Jocher, Glenn, et al. "Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models." *arXiv*, 2026, https://arxiv.org/abs/2606.03748.
 
 **Poznámka:** např. YOLOv5 nebo YOLOv11 jsou dostupné jako repozitáře na GitHub Ultralytics.
