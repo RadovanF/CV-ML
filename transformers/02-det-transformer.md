@@ -96,17 +96,6 @@ for d in detector(url):
     print(f"{d['label']:10} {d['score']:.2f} {d['box']}")
 ```
 
-Ukázka výstupu (yolos-tiny):
-```
-remote     0.99 {'xmin': 46, 'ymin': 72, 'xmax': 178, 'ymax': 119}
-remote     0.91 {'xmin': 336, 'ymin': 79, 'xmax': 368, 'ymax': 192}
-cat        0.93 {'xmin': 337, 'ymin': 18, 'xmax': 638, 'ymax': 373}
-cat        0.98 {'xmin': 10, 'ymin': 53, 'xmax': 313, 'ymax': 470}
-bed        0.50 {'xmin': 0, 'ymin': 1, 'xmax': 640, 'ymax': 474}
-remote     0.97 {'xmin': 41, 'ymin': 72, 'xmax': 178, 'ymax': 120}
-```
-Levý ovladač je ve výstupu **dvakrát** (0.99 a 0.97). Hungarian matching duplicity při tréninku penalizuje, ale u malého modelu je úplně neodstraní. DETR (ResNet-50) na stejném obrázku duplicitu nemá.
-
 ---
 
 ## 3. ViTDet – ViT jako backbone pro detekci
