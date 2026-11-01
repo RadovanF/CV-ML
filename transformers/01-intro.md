@@ -2,8 +2,7 @@
 
 **(PRACOVNÍ VERZE v1)**
 
-1. **Část I: Nadhled** – Intuitivní pochopení principů + ukázka hotových modelů pomocí knihoven např. `gensim` a `transformers`.
-2. **Část II: Podrobnější informace** –  Funkčnost jednotlivých modulů na úrovni tenzorových operací (v knihovně `PyTorch`).
+Intuitivní pochopení principů + ukázka hotových modelů pomocí knihoven např. `gensim` a `transformers`.
 
 ---
 
