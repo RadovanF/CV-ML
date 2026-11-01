@@ -37,7 +37,7 @@ Naučitelné vektory, typicky jich je 100–300. Fungují podobně jako CLS toke
 
 ### 0.4 Hungarian matching – proč není potřeba NMS
 - **Klasické YOLO** (v1 až v9, v11, v12): jeden objekt může predikovat víc kandidátů najednou (sousední buňky, více boxů nebo anchorů na buňku), proto se duplicitní boxy musí na konci odfiltrovat pomocí **NMS**. Novější YOLOv10 a YOLO26 se NMS zbavily podobnou myšlenkou jako DETR: při tréninku přiřazují jednomu objektu jedinou predikci.
-- **DETR a jeho následovníci:** model vždy vrátí pevný počet predikcí (např. 100). Při tréninku se **Hungarian algoritmem** najde přiřazení „1 skutečný objekt ↔ právě 1 predikce“ s nejmenší celkovou chybou (shoda třídy + vzdálenost boxů). Zbylé predikce se musí naučit říkat „∅“.
+- **DETR:** model vrátí pevný počet predikcí (např. 100). Při tréninku se **Hungarian algoritmem** najde přiřazení „1 skutečný objekt ↔ právě 1 predikce“ s nejmenší celkovou chybou (shoda třídy + vzdálenost boxů). Zbylé predikce se musí naučit říkat „∅“.
 - Za každý objekt je tedy zodpovědná **jen jedna predikce** a model je za duplicity při tréninku penalizován. Proto **NMS odpadá**.
 - Jinými slovy: odstraňování duplicit už **není ručně napsaný krok v postprocessingu, ale síť se ho naučí sama** během tréninku.
 
