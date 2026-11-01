@@ -155,8 +155,6 @@ model.train(data="muj_dataset.yaml", epochs=50, imgsz=640)   # stejný yaml a fo
 3. **Jeden trénink → mnoho variant (weight-sharing NAS):** během tréninku se náhodně mění velikost patche, rozlišení, počet vrstev decoderu, počet dotazů a počet oken. Po tréninku si lze vybrat variantu podle požadované rychlosti **bez dalšího tréninku**.
 4. Existuje i varianta pro segmentaci: **RF-DETR-Seg**.
 
-**Výsledky:** první real-time detektor s více než 60 AP na COCO (verze 2x-large). Varianta nano dosahuje 48,0 AP.
-
 ### Ukázka – inference
 Dokumentace: https://github.com/roboflow/rf-detr
 ```python
@@ -177,7 +175,7 @@ from rfdetr import RFDETRBase
 
 model = RFDETRBase()
 model.train(
-    dataset_dir="muj_dataset",    # pozor: formát COCO (train/ valid/ test/ + _annotations.coco.json)
+    dataset_dir="muj_dataset",
     epochs=50,
     batch_size=4,
     grad_accum_steps=4,
@@ -185,4 +183,4 @@ model.train(
     output_dir="vystup",
 )
 ```
-Ovládání je podobné jako u Ultralytics YOLO. Liší se ale **formát datasetu**: RF-DETR v základu čte anotace ve formátu **COCO JSON**, ne YOLO `.txt`. Roboflow umí dataset exportovat do obou formátů.
+Použití je podobné jako u Ultralytics YOLO.
