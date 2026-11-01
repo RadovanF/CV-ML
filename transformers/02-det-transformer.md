@@ -2,8 +2,7 @@
 
 **(PRACOVNÍ VERZE v1)**
 
-Navazuje na přednášky o detekci (R-CNN, YOLO) a o Vision Transformeru (ViT).
-Celou přednáškou provází jedna otázka: **kde v detektoru je Transformer a co tam dělá?**
+Navazuje na přednášky o detekci (R-CNN, YOLO) a o Vision Transformeru (ViT) - tentokrát z pohledu transformer + lokalizace objektů.
 
 ---
 
