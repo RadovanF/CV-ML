@@ -46,6 +46,7 @@ Naučitelné vektory, typicky jich je 100–300. Fungují podobně jako CLS toke
 ## 1. DETR – DEtection TRansformer
 *Carion et al., Facebook AI, 2020 – „End-to-End Object Detection with Transformers“*
 
+<img src="./imgs/detr-Fig2.png" alt="" width="720">
 
 **Architektura:**
 1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku (např. 24×24 buněk s hloubkou 2048).
