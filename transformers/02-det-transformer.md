@@ -48,20 +48,13 @@ Naučitelné vektory, typicky jich je 100–300. Fungují podobně jako CLS toke
 
 
 **Architektura:**
-1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku (extrakce příznaků pomocí CNN).
-Vstup: Vstupní obrázek o rozměrech $3 \times H_0 \times W_0$.
-CNN Backbone (ResNet-50 / ResNet-101): Konvoluční síť zmenší prostorové rozlišení (typicky 32×) a vyextrahujte 2D mapu příznaků $C \times H \times W$ (např. $2048 \times 24 \times 24$).
-Token v DETR vs. ViT: Na rozdíl od ViT (kde token tvoří surové pixely z 2D patche) představuje token v DETR vektor bohatých abstraktních vizuálních vlastností (hrany, textury, dílčí tvary objektů) vyextrahovaných konvoluční sítí.
-
-2. **Příznaková mapa se rozloží na sekvenci tokenů** (každá pozice = jeden token) a přičte se poziční kódování, "podobně" jako u ViT.
-Před vstupem do Transformeru probíhá úprava rozměrů tenzoru: 1×1 Konvoluce: Zredukuje kanálovou dimenzi z $C=2048$ na $d=256$.
-Zploštění (Flattening): Prostorové dimenze výšky ($H$) a šířky ($W$) se sloučí do jedné sekvenční řady tokenů ($H \cdot W$).
-Před zploštěním (2D mapa): $256 \text{ (kanálů)} \times 24 \text{ (výška)} \times 24 \text{ (šířka)}$ — 2D mřížka prostorových buněk příznaků.
-Po zploštění (1D sekvence): $576 \text{ tokenů} \times 256 \text{ dimenze (kanálů)}$ — sekvence 576 samostatných tokenů pro Transformer.
-
+1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku (např. 24×24 buněk s hloubkou 2048).
+**V čem je rozdíl oproti ViT?** Vektor v buňce z ResNetu není jen shluk surových barevných pixelů. Je to už „chytrý“ popis – obsahuje informace o hranách, tvarech a texturách, které ResNet extrahoval.
+2. **Příznaková Mapa (24×24×2048)** se zmenší pomocí 1×1 konvoluce: zredukuje kanálovou dimenzi z $C=2048$ na $d=256$.
+3. **Příznaková Mapa (24×24×256)** se rozloží na sekvenci tokenů (každá pozice = jeden token): provede se zploštění (Flattening). Tím vznikne **sekvence 576 tokenů**. Můžete si to představit jako větu o 576 slovech, kde každé „slovo“ popisuje jednu konkrétní část obrázku a má délku 256 čísel. A přičte se poziční kódování, podobně jako u ViT. 
 4. **Transformer encoder (self-attention)** – tokeny obrázku se dívají navzájem na sebe.
 5. **Transformer decoder (cross-attention)** – 100 object queries se dívá do tokenů obrázku a každý si vytáhne jeden objekt.
-6. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅).
+6. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅)).
 
 
 
