@@ -25,7 +25,7 @@ Navazuje na přednášky o detekci (R-CNN, YOLO) a o Vision Transformeru (ViT) -
 - **Neck** – kombinuje příznaky z různých měřítek (např. FPN).
 - **Head** – z příznaků predikuje třídy a bounding boxy.
 
-U detektorů v této přednášce může být Transformer na různých místech: jen v backbonu (ViTDet), jen v hlavě (DETR, RT-DETR) nebo všude (YOLOS, RF-DETR).
+U detektorů v tomto materiálu může být Transformer na různých místech: jen v backbonu (ViTDet), jen v hlavě (DETR, RT-DETR) nebo kombinace (YOLOS, RF-DETR).
 
 ### 0.2 Encoder a decoder v Transformeru
 Pozor, v Transformerech neznamená encoder-decoder totéž co u autoencoderu nebo U-Netu. Tam encoder data **stlačí** do malého „hrdla“ (bottleneck) a decoder je zase rozbalí. V Transformeru se nic nestlačuje:
@@ -46,12 +46,24 @@ Naučitelné vektory, typicky jich je 100–300. Fungují podobně jako CLS toke
 ## 1. DETR – DEtection TRansformer
 *Carion et al., Facebook AI, 2020 – „End-to-End Object Detection with Transformers“*
 
+
 **Architektura:**
-1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku.
-2. Mapa se rozloží na sekvenci tokenů (každá pozice = jeden token) a přičte se poziční kódování, stejně jako u ViT.
-3. **Transformer encoder (self-attention)** – tokeny obrázku se dívají navzájem na sebe.
-4. **Transformer decoder (cross-attention)** – 100 object queries se dívá do tokenů obrázku a každý si vytáhne jeden objekt.
-5. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅).
+1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku (extrakce příznaků pomocí CNN).
+Vstup: Vstupní obrázek o rozměrech $3 \times H_0 \times W_0$.
+CNN Backbone (ResNet-50 / ResNet-101): Konvoluční síť zmenší prostorové rozlišení (typicky 32×) a vyextrahujte 2D mapu příznaků $C \times H \times W$ (např. $2048 \times 24 \times 24$).
+Token v DETR vs. ViT: Na rozdíl od ViT (kde token tvoří surové pixely z 2D patche) představuje token v DETR vektor bohatých abstraktních vizuálních vlastností (hrany, textury, dílčí tvary objektů) vyextrahovaných konvoluční sítí.
+
+2. **Příznaková mapa se rozloží na sekvenci tokenů** (každá pozice = jeden token) a přičte se poziční kódování, "podobně" jako u ViT.
+Před vstupem do Transformeru probíhá úprava rozměrů tenzoru: 1×1 Konvoluce: Zredukuje kanálovou dimenzi z $C=2048$ na $d=256$.
+Zploštění (Flattening): Prostorové dimenze výšky ($H$) a šířky ($W$) se sloučí do jedné sekvenční řady tokenů ($H \cdot W$).
+Před zploštěním (2D mapa): $256 \text{ (kanálů)} \times 24 \text{ (výška)} \times 24 \text{ (šířka)}$ — 2D mřížka prostorových buněk příznaků.
+Po zploštění (1D sekvence): $576 \text{ tokenů} \times 256 \text{ dimenze (kanálů)}$ — sekvence 576 samostatných tokenů pro Transformer.
+
+4. **Transformer encoder (self-attention)** – tokeny obrázku se dívají navzájem na sebe.
+5. **Transformer decoder (cross-attention)** – 100 object queries se dívá do tokenů obrázku a každý si vytáhne jeden objekt.
+6. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅).
+
+
 
 **Co je nové:** žádné anchory, žádné NMS, žádné ručně laděné kroky. Celý detektor je jedna síť trénovaná end-to-end.
 
