@@ -160,7 +160,7 @@ Dokumentace: https://github.com/roboflow/rf-detr
 ```python
 # pip install rfdetr
 from rfdetr import RFDETRBase                     # novější verze: RFDETRNano, RFDETRSmall, RFDETRMedium, …
-from rfdetr.util.coco_classes import COCO_CLASSES
+from rfdetr.assets.coco_classes import COCO_CLASSES
 
 model = RFDETRBase()
 detections = model.predict("000000039769.jpg", threshold=0.5)    # výstup = supervision.Detections
