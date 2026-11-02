@@ -51,10 +51,11 @@ Naučitelné vektory, typicky jich je 100–300. Fungují podobně jako CLS toke
 1. **CNN backbone** (ResNet-50) vytvoří mapu příznaků obrázku (např. 24×24 buněk s hloubkou 2048).
 **V čem je rozdíl oproti ViT?** Vektor v buňce z ResNetu není jen shluk surových barevných pixelů. Je to už „chytrý“ popis – obsahuje informace o hranách, tvarech a texturách, které ResNet extrahoval.
 2. **Příznaková Mapa (24×24×2048)** se zmenší pomocí 1×1 konvoluce: zredukuje kanálovou dimenzi z $C=2048$ na $d=256$.
-3. **Příznaková Mapa (24×24×256)** se rozloží na sekvenci tokenů (každá pozice = jeden token): provede se zploštění (Flattening). Tím vznikne **sekvence 576 tokenů**. Můžete si to představit jako větu o 576 slovech, kde každé „slovo“ popisuje jednu konkrétní část obrázku a má délku 256 čísel. A přičte se poziční kódování, podobně jako u ViT. 
-4. **Transformer encoder (self-attention)** – tokeny obrázku se dívají navzájem na sebe.
-5. **Transformer decoder (cross-attention)** – 100 object queries se dívá do tokenů obrázku a každý si vytáhne jeden objekt.
-6. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅)).
+3. **Příznaková Mapa (24×24×256)** se rozloží na sekvenci tokenů (každá pozice = jeden token): provede se zploštění (Flattening). Tím vznikne **sekvence 576 tokenů**. Káždý token popisuje jednu konkrétní část obrázku a má délku 256 čísel. A přičte se poziční kódování, podobně jako u ViT. 
+4. **Transformer encoder (self-attention)** – tokeny obrázku se dívají navzájem na sebe. Transformer Encoder vyhodnocuje vzájemné vztahy každého z 576 tokenů ke všem ostatním tokenům v obrázku.  Zatímco na vstupu měl každý token informace pouze o své vlastní lokální buňce, na výstupu obsahuje každý vektor znalost o celé scéně a o vztazích ke všem ostatním buňkám (globální kontext a separace objektů). Rozměry tenzoru zůstávají zachovány ($576 \times 256$).
+5. **Transformer decoder (object queries)** – 100 object queries se dívá do tokenů obrázku a každý si vytáhne jeden objekt.
+Do decoderu vstupuje pevný počet naučitelných vektorů (v DETR 100 objektových dotazů / Object Queries o rozměru $100 \times 256$). Jde o přímé zobecnění myšlenky [CLS] tokenu z ViT: zatímco [CLS] token sloužil jako jediná „houba“ pro celkovou klasifikaci obrázku, zde funguje 100 dotazů jako samostatné detekční tokeny, z nichž každý nasaje informace o jednom konkrétním objektu (nebo vrací prázdný slot. Tyto dotazy se nejprve pomocí self-attention vzájemně zkoordinují (aby nepredikovaly stejné objekty a nahradily tak NMS) a následně si pomocí cross-attention vytáhnou vizuální data z paměti encoderu.
+7. Každý výstup decoderu → malá FFN → **třída + box** (nebo ∅)).
 
 
 
