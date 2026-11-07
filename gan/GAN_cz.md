@@ -241,47 +241,54 @@ flowchart LR
   classDef disc fill:#ffe0e0,stroke:#cc4444
 ```
 
+#### Odkud bere diskriminátor trénovací data?
+
+Z datasetu dostane diskriminátor **jen reálné obrázky**, tedy pozitivní příklady s labelem 1. Negativní příklady (label 0) mu **vyrábí generátor**:
+
+```
+dataset   → real_images  → label 1   (pozitivní)
+generátor → fake_images  → label 0   (negativní)
+```
+
+V každém kroku vidí D oba druhy, jeden batch reálných a jeden batch fake (kroky 1A a 1B níže).
+
+**1. Nepotřebujeme žádný dataset negativních příkladů.**
+Stačí hromada obrázků toho, co chceme generovat (třeba obličeje). Nikdo nemusí ručně sbírat ani označovat „ne-obličeje“. Labely 1/0 se v kódu vytvoří automaticky (`torch.ones`, `torch.zeros`) podle toho, odkud obrázek pochází. Proto se GAN řadí mezi učení **bez učitele**: dataset nemá žádné anotace.
+
+**2. Negativní příklady se v čase mění.**
+- Na začátku jsou fake obrázky šum, takže je D rozliší snadno.
+- Jak se G zlepšuje, negativní příklady jsou čím dál podobnější reálným a D se musí učit jemnější rozdíly.
+
+D tedy nikdy nevidí pevnou sadu negativů. Trénuje na **pohyblivém cíli**, který mu připravuje jeho soupeř. To je ta „adversarial“ část a zároveň důvod, proč je trénink GAN nestabilní.
+
+**3. D se nikdy neučí obecné „je to obličej / není to obličej“.**
+Učí se jen „je to z datasetu / je to z aktuálního generátoru“. Proto je D po tréninku jako samostatný klasifikátor obvykle k ničemu a zahazuje se. Výsledkem tréninku je generátor.
+
 #### FÁZE 1: Trénování diskriminátora (učí se poznat rozdíly)
 
 **Cíl:** Diskriminátor by měl lépe rozlišovat reálná a falešná data.
 
-##### Krok 1A: Učíme se na reálných datech
-
 ```python
+# Krok 1A: Výpočet chyby na reálných datech
 outputs_real = discriminator(real_images)
 d_loss_real = loss_function(outputs_real, real_labels)  # real_labels = 1
-```
 
-Diskriminátor vidí skutečné obrázky a měl by vrátit hodnoty blízké 1.
-
-##### Krok 1B: Učíme se na falešných datech
-
-```python
+# Krok 1B: Výpočet chyby na falešných datech
 noise = torch.randn(batch_size, 100)
 fake_images = generator(noise)
-outputs_fake = discriminator(fake_images)
 
-# DŮLEŽITÉ: Používáme .detach()
-# Tím se gradienty propagují pouze do diskriminátora, ne do generátoru
-d_loss_fake = loss_function(outputs_fake.detach(), fake_labels)  # fake_labels = 0
-```
+# DŮLEŽITÉ: Metoda .detach() je volána na obrázcích. 
+# Výpočetní graf je tím přerušen a gradienty nejsou propagovány do generátoru.
+outputs_fake = discriminator(fake_images.detach())
+d_loss_fake = loss_function(outputs_fake, fake_labels)  # fake_labels = 0
 
-Generátor vytvoří falešné obrázky a diskriminátor by měl vrátit hodnoty blízké 0.
-
-**Poznámka o `.detach()`:** 
-V reálné implementaci používáme `fake_images.detach()`, aby se gradientní informace **nepropagovaly zpět do generátoru**. Chceme, aby se v Fázi 1 upravovaly pouze váhy diskriminátora.
-
-##### Krok 1C: Zpětné šíření a optimalizace diskriminátora
-
-```python
+# Krok 1C: Zpětné šíření a optimalizace
 d_loss = d_loss_real + d_loss_fake
 
 d_optimizer.zero_grad()  
 d_loss.backward()         
-d_optimizer.step()        
+d_optimizer.step()
 ```
-
-Diskriminátor se naučil z obou druhů dat. Jeho chyba je součet chyb z reálných a falešných dat.
 
 ---
 
@@ -375,3 +382,4 @@ Na řešení těchto problémů se zaměřují pokročilejší varianty:
 - PGGAN – řeší stabilitu u velkých rozlišení
 - BigGAN – řeší škálování na rozsáhlé datasety
 - Self-Attention GAN –  přidává do sítí self‑attention vrstvy
+
