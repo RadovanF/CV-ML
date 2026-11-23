@@ -131,7 +131,7 @@ Jediná část sítě, která se učí, je **Decoder** (VGG Encoder je zmrazený
 V klasickém GANu vstupuje náhodný šum $z$ přímo do první vrstvy generátoru, který z něj pouze pomocí běžných konvolucí a zvětšování skládá obraz, takže jsou všechny jeho vlastnosti navzájem propletené. StyleGAN místo toho začíná vykreslovat vždy ze stejného naučeného základu a za každou konvoluci přidává vrstvu **AdaIN**, pomocí které do obrazu v každém rozlišení vkládá „styl“ (průměr a odchylku kanálů). Tyto stylové parametry si generátor počítá ze šumu $z$ v oddělené pomocné síti (*Mapping network*), díky čemuž lze vzhled obrazu řídit po vrstvách – od hrubého tvaru v nízkém rozlišení až po barvy a detaily ve vysokém rozlišení.
 
 <center>
-<img src="./imgs/d-style-gan-01.png" alt="StyleGAN" width="600">
+<img src="./imgs/d-style-gan-01.png" alt="StyleGAN" width="460">
 </center>
 
 ### Jak funguje generátor ve StyleGANu (srovnání na obrázku)
