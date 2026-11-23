@@ -32,19 +32,6 @@ Navazuje na přednášku o generativních sítích (GAN) a ukazuje cestu od klas
 <img src="./imgs/a-style-01.png" alt="Klasický Neural Style Transfer" width="600">
 </center>
 
-### Ukázka – Gramova matice a jeden krok optimalizace
-```python
-def gram_matrix(feat):
-    B, C, H, W = feat.size()
-    f = feat.view(B * C, H * W)
-    G = f @ f.t()                        # korelace každé dvojice kanálů: tvar (C, C)
-    return G / (B * C * H * W)
-
-# V každém kroku se mění přímo pixely generovaného obrázku x:
-# loss = alpha * MSE(feat_x, feat_content) + beta * MSE(gram(feat_x), gram(feat_style))
-# loss.backward() -> optimizer.step() upraví x
-```
-
 **Slabina:** Vytvoření jediného obrázku vyžaduje stovky průchodů sítí VGG (optimalizace trvá sekundy až minuty).
 
 ---
@@ -56,7 +43,7 @@ def gram_matrix(feat):
 
 **Řešení:**
 1. Předem se natrénuje samostatná **transformační síť** (typu encoder-decoder s reziduálními bloky), která na vstupu přijme fotografii a na výstupu vrátí přebarvený obraz.
-2. Zmrazená síť VGG-19 se použije **pouze během tréninku** pro výpočet obsahové a stylové ztráty (tzv. *perceptual loss*).
+2. Zmrazená předtrénovaná síť VGG (např. VGG-16 nebo VGG-19) se použije **pouze během tréninku** pro výpočet obsahové a stylové ztráty (tzv. *perceptual loss*).
 3. Místo jednoho obrázku se optimalizují **váhy transformační sítě** na tisících fotografiích pro jeden vybraný stylový obraz.
 4. Po natrénování se VGG zahodí. Nová fotografie se stylizuje **jediným dopředným průchodem** (*forward pass*) za několik milisekund.
 
@@ -76,7 +63,7 @@ def gram_matrix(feat):
 2. **Směrodatnou odchylku ($\sigma$):** jak moc se aktivita filtru v různých částech obrazu mění (zda je vlastnost rozprostřená rovnoměrně, nebo jen lokálně).
 
 **Souvislost s Gramovou maticí:**
-V Gramově matici leží mimo diagonálu vztahy mezi různými filtry („které dva filtry svítí společně“), zatímco na diagonále je každý filtr porovnán sám se sebou („jak moc filtr v obraze celkově svítí“). Použití průměru $\mu$ a odchylky $\sigma$ tedy odpovídá zachování **pouze diagonály Gramovy matice**. Vztahy mezi různými filtry se zahodí, a výsledný obraz přesto vypadá téměř stejně jako u původní metody.
+V Gramově matici leží mimo diagonálu vztahy mezi různými filtry („které dva filtry svítí společně“), zatímco na diagonále je každý filtr porovnán sám se sebou („jak moc filtr v obraze celkově svítí“). Použití průměru $\mu$ a odchylky $\sigma$ tedy zhruba odpovídá zachování **pouze diagonály Gramovy matice**. Vztahy mezi různými filtry se zahodí, a výsledný obraz přesto vypadá téměř stejně jako u původní metody.
 
 **Poznámka k názvu v článku:**
 V publikaci se metoda nazývá *BN statistics matching* (podle vrstvy Batch Normalization, která počítá průměr a odchylku). Protože se ale statistiky počítají vždy pro jeden konkrétní obrázek zvlášť a ne přes celou dávku, odpovídá tento výpočet vrstvě **Instance Normalization (IN)**.
@@ -131,7 +118,7 @@ Jediná část sítě, která se učí, je **Decoder** (VGG Encoder je zmrazený
 V klasickém GANu vstupuje náhodný šum $z$ přímo do první vrstvy generátoru, který z něj pouze pomocí běžných konvolucí a zvětšování skládá obraz, takže jsou všechny jeho vlastnosti navzájem propletené. StyleGAN místo toho začíná vykreslovat vždy ze stejného naučeného základu a za každou konvoluci přidává vrstvu **AdaIN**, pomocí které do obrazu v každém rozlišení vkládá „styl“ (průměr a odchylku kanálů). Tyto stylové parametry si generátor počítá ze šumu $z$ v oddělené pomocné síti (*Mapping network*), díky čemuž lze vzhled obrazu řídit po vrstvách – od hrubého tvaru v nízkém rozlišení až po barvy a detaily ve vysokém rozlišení.
 
 <center>
-<img src="./imgs/d-style-gan-01.png" alt="StyleGAN" width="460">
+<img src="./imgs/d-style-gan-01.png" alt="StyleGAN" width="600">
 </center>
 
 ### Jak funguje generátor ve StyleGANu (srovnání na obrázku)
@@ -145,7 +132,6 @@ Ve StyleGANu **(b) vpravo** je generátor rozdělený na **dvě větve**, které
 2. **Pravá větev (`Synthesis network g`) – začíná z naučené konstanty (`Const 4×4×512`) a kreslí obraz:**
    Pravá větev skládá samotný obrázek od rozlišení $4 \times 4$ až po $1024 \times 1024$. Aby měly bloky AdaIN na čem pracovat, potřebují na začátku nějakou výchozí mapu příznaků (stejně jako u přenosu stylu potřebovaly příznaky fotky). Proto pravá větev začíná shora vždy ze stejného bloku čísel **`Const 4×4×512`**:
    - **Proč „naučený“:** na začátku tréninku jsou v něm náhodná čísla, která si síť během tréninku sama upraví do podoby univerzálního hrubého základu (např. obecného obrysu tváře).
-   - **Proč „konstanta“:** po skončení tréninku se tento blok zmrazí. Každý generovaný obrázek tak na startu pravé větve začíná z úplně stejného „výchozího plátna“ a v konkrétního člověka se promění až díky stylu $w$ z levé větve.
 3. **Spojení obou větví přes AdaIN (šipky z $w$ přes `A` do `AdaIN`):**
    Z levé větve se vektor stylu $w$ přivádí **z boku** do každé vrstvy pravé větve. Krabička `A` z něj vždy spočítá průměr ($\mu$) a odchylku ($\sigma$) a blok **AdaIN** jimi přepíše příznaky procházející pravou větví. Podle toho, ve kterém rozlišení se styl zrovna vkládá, mění jiné vlastnosti:
    - **Malé rozlišení ($4 \times 4$ až $8 \times 8$):** tvaruje celkovou kompozici (natočení hlavy, tvar obličeje, účes).
@@ -156,7 +142,7 @@ Ve StyleGANu **(b) vpravo** je generátor rozdělený na **dvě větve**, které
 
 ### Další vývoj rodiny StyleGAN (pro zajímavost)
 
-Na původní StyleGAN postupně navázalo několik vylepšených verzí od stejného týmu (NVIDIA):
+Na původní StyleGAN postupně navázalo několik vylepšených verzí:
 
 | Verze | Rok | Co hlavní přináší | Publikace |
 |---|---|---|---|
@@ -167,4 +153,4 @@ Na původní StyleGAN postupně navázalo několik vylepšených verzí od stejn
 | **StyleGAN-T** | 2023 | Přizpůsobuje StyleGAN pro generování obrazu podle textového popisu (*text-to-image*) jako výrazně rychlejší alternativu k difuzním modelům. | [arXiv:2301.09515](https://arxiv.org/abs/2301.09515) |
 
 **Přesah do dnešních difuzních modelů:**
-Zatímco novější verze StyleGANu (od StyleGAN2 po StyleGAN-T) klasický blok AdaIN nahradily přímým přeškálováním vah konvolučních filtrů, v **dnešních difuzních modelech** se původní princip AdaIN znovu naplno uplatnil. V moderních difuzních architekturách založených na Transformerech (např. *Diffusion Transformer – DiT*, na kterém staví modely jako Flux nebo Sora) se informace o kroku odšumování a zadání vkládá do každé vrstvy sítě právě přes **adaptivní normalizaci (AdaLN)** – tedy normalizací příznaků a přepsáním jejich průměru a odchylky, úplně stejně jako v původním StyleGANu.
+Zatímco novější verze StyleGANu (od StyleGAN2 po StyleGAN-T) klasický blok AdaIN nahradily přímým přeškálováním vah konvolučních filtrů, v **dnešních difuzních modelech** se původní princip AdaIN znovu uplatnil. V moderních difuzních architekturách založených na Transformerech (např. *Diffusion Transformer – DiT*, na kterém staví modely jako Flux nebo Sora) se informace o kroku odšumování a zadání vkládá do každé vrstvy sítě přes **adaptivní normalizaci (AdaLN)**, která je inspirována podobným principem jako AdaIN.
