@@ -68,20 +68,6 @@ V Gramově matici leží mimo diagonálu vztahy mezi různými filtry („které
 **Poznámka k názvu v článku:**
 V publikaci se metoda nazývá *BN statistics matching* (podle vrstvy Batch Normalization, která počítá průměr a odchylku). Protože se ale statistiky počítají vždy pro jeden konkrétní obrázek zvlášť a ne přes celou dávku, odpovídá tento výpočet vrstvě **Instance Normalization (IN)**.
 
-### Ukázka – výpočet stylu pomocí $\mu$ a $\sigma$
-*(kompletní implementace v `style_meanstd.py`)*
-```python
-def mean_std(feat, eps=1e-5):
-    B, C, H, W = feat.shape
-    f = feat.view(B, C, -1)                  # zploštění prostoru na (B, C, H*W)
-    mu = f.mean(dim=2)                       # průměr každého kanálu: (B, C)
-    sigma = (f.var(dim=2) + eps).sqrt()      # odchylka každého kanálu: (B, C)
-    return mu, sigma
-
-# Stylová ztráta porovnává pouze vektory mu a sigma:
-# style_loss = MSE(mu_x, mu_style) + MSE(sigma_x, sigma_style)
-```
-
 ---
 
 ## 4. AdaIN – Adaptive Instance Normalization
